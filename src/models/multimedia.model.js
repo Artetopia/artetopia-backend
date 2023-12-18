@@ -5,7 +5,6 @@ const multimediaSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    // default: ''
   },
   key: {
     type: String,

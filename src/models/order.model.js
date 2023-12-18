@@ -1,7 +1,19 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
-  orderItems: {},
+  orderItems: [
+    {
+      itemId: {
+        // type: String, // required: true, // trim: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'item',
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   address: {
     type: Object,
     street: {
@@ -50,13 +62,15 @@ const orderSchema = new mongoose.Schema({
       maxLenght: 6,
     },
   },
+  totalPrice: {
+    type: Number,
+  },
+  paymentIntentStripe: {
+    type: String,
+  },
   shippingSatus: {
     type: String,
     enum: ['created', 'picked', 'shipped', 'delivered'],
-  },
-  avatar: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
   },
   createdAt: {
     type: Date,
@@ -65,6 +79,10 @@ const orderSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
   },
 });
 

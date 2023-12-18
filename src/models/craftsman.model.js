@@ -8,22 +8,36 @@ const craftsmanSchema = new mongoose.Schema({
     maxLenght: 19,
     trim: true,
   },
-  website: {},
+  websiteId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'website',
+  },
   itemsId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'item',
   },
-  categories: {},
-  shipment: {},
-  accountIdStripe: {},
+  categories: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'categoryl1',
+  },
+  shipment: {
+    type: Boolean,
+    required: true,
+  },
+  accountIdStripe: {
+    type: String,
+    required: true,
+  },
   isCrafstman: {
     type: String,
     enum: ['process', 'accepted', 'declined'],
+    required: true,
   },
   step: {
     type: Number,
+    required: true,
   },
-  reatedAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },

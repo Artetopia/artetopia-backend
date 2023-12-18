@@ -15,7 +15,10 @@ const itemSchema = new mongoose.Schema({
     minLength: 40,
     maxLength: 160,
   },
-  category: {},
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'categoryl1',
+  },
   inventory: {
     type: Number,
     required: true,

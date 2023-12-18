@@ -17,8 +17,12 @@ const feedbackSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
+    required: true,
   },
-  attachment: {},
+  attachment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'multimedia',
+  },
   createdAt: {
     type: Date,
     default: Date.now,
