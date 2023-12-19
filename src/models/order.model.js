@@ -4,9 +4,10 @@ const orderSchema = new mongoose.Schema({
   orderItems: [
     {
       itemId: {
-        // type: String, // required: true, // trim: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'item',
+        required: true,
+        trim: true,
       },
       quantity: {
         type: Number,
@@ -64,6 +65,7 @@ const orderSchema = new mongoose.Schema({
   },
   totalPrice: {
     type: Number,
+    required: true,
   },
   paymentIntentStripe: {
     type: String,
@@ -71,6 +73,7 @@ const orderSchema = new mongoose.Schema({
   shippingSatus: {
     type: String,
     enum: ['created', 'picked', 'shipped', 'delivered'],
+    default: 'created',
   },
   createdAt: {
     type: Date,
@@ -79,6 +82,10 @@ const orderSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'feedback',
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

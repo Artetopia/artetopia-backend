@@ -12,14 +12,30 @@ const craftsmanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'website',
   },
-  itemsId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'item',
-  },
-  categories: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'categoryl1',
-  },
+  templateId: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'tempmlate',
+    },
+  ],
+  templateColorsId: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'templateColors',
+    },
+  ],
+  itemsId: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'item',
+    },
+  ],
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'categoryl1',
+    },
+  ],
   shipment: {
     type: Boolean,
     required: true,

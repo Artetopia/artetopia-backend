@@ -1,33 +1,33 @@
 import mongoose from 'mongoose';
 
-const itemSchema = new mongoose.Schema({
-  title: {
+const templateColorsSchema = {
+  name: {
     type: String,
     required: true,
     trim: true,
-    minLength: 3,
-    maxLength: 30,
   },
-  description: {
+  primaryColor: {
     type: String,
     required: true,
     trim: true,
-    minLength: 40,
-    maxLength: 160,
   },
-  inventory: {
-    type: Number,
+  secondaryColor: {
+    type: String,
     required: true,
     trim: true,
   },
-  price: {
-    type: Number,
+  tertiaryColor: {
+    type: String,
     required: true,
     trim: true,
   },
-  images: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'multimedia',
+  hasVideo: {
+    type: Boolean,
+    required: true,
+  },
+  isActive: {
+    type: Boolean,
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -41,6 +41,6 @@ const itemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'craftsman',
   },
-});
+};
 
-module.exports = mongoose.model('item', itemSchema);
+module.express = mongoose.model('template', templateSchema);

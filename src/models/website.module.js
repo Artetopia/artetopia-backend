@@ -27,7 +27,6 @@ const websiteSchema = new mongoose.Schema({
     {
       title: {
         type: String,
-        required: true,
         trim: true,
         minLength: 3,
         maxLength: 30,
@@ -56,6 +55,10 @@ const websiteSchema = new mongoose.Schema({
   template: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'template',
+  },
+  craftsman: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'craftsman',
   },
 });
 

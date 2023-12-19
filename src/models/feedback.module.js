@@ -31,6 +31,10 @@ const feedbackSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  attachment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'craftsman',
+  },
 });
 
 module.exports = mongoose.model('feedback', feedbackSchema);
