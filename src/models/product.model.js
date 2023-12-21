@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const itemSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -25,10 +25,12 @@ const itemSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  images: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'multimedia',
-  },
+  images: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'multimedia',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -43,4 +45,4 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('item', itemSchema);
+module.exports = mongoose.model('product', productSchema);

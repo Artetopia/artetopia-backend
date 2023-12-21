@@ -6,6 +6,12 @@ const templateSchema = {
     enum: ['A', 'B'],
     required: true,
   },
+  hasSections: {
+    type: Boolean,
+  },
+  hasVideo: {
+    type: Boolean,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

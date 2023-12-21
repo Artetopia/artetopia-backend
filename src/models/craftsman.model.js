@@ -24,10 +24,10 @@ const craftsmanSchema = new mongoose.Schema({
       ref: 'templateColors',
     },
   ],
-  itemsId: [
+  productsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'item',
+      ref: 'product',
     },
   ],
   categories: [
