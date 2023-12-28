@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const craftsmanSchema = new mongoose.Schema({
   state: {
@@ -10,30 +10,30 @@ const craftsmanSchema = new mongoose.Schema({
   },
   websiteId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'website',
+    ref: "website",
   },
   templateId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'tempmlate',
+      ref: "tempmlate",
     },
   ],
   templateColorsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'templateColors',
+      ref: "templateColors",
     },
   ],
   productsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'product',
+      ref: "product",
     },
   ],
   categories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'categoryl1',
+      ref: "categoryl1",
     },
   ],
   shipment: {
@@ -46,7 +46,7 @@ const craftsmanSchema = new mongoose.Schema({
   },
   isCrafstman: {
     type: String,
-    enum: ['process', 'accepted', 'declined'],
+    enum: ["process", "accepted", "declined"],
     required: true,
   },
   step: {
@@ -63,12 +63,12 @@ const craftsmanSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: "user",
   },
   tier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'tier',
+    ref: "tier",
   },
 });
 
-module.exports = mongoose.model('craftsman', craftsmanSchema);
+module.exports = mongoose.model("craftsman", craftsmanSchema);

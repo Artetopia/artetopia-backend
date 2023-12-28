@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const templateColorsSchema = {
   name: {
@@ -39,8 +39,8 @@ const templateColorsSchema = {
   },
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'craftsman',
+    ref: "craftsman",
   },
 };
 
-module.express = mongoose.model('template', templateSchema);
+module.express = mongoose.model("template", templateSchema);

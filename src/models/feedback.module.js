@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const feedbackSchema = new mongoose.Schema({
   title: {
@@ -21,7 +21,7 @@ const feedbackSchema = new mongoose.Schema({
   },
   attachment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'multimedia',
+    ref: "multimedia",
   },
   createdAt: {
     type: Date,
@@ -33,8 +33,8 @@ const feedbackSchema = new mongoose.Schema({
   },
   attachment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'craftsman',
+    ref: "craftsman",
   },
 });
 
-module.exports = mongoose.model('feedback', feedbackSchema);
+module.exports = mongoose.model("feedback", feedbackSchema);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
   title: {
@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
   images: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'multimedia',
+      ref: "multimedia",
     },
   ],
   createdAt: {
@@ -41,8 +41,8 @@ const productSchema = new mongoose.Schema({
   },
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'craftsman',
+    ref: "craftsman",
   },
 });
 
-module.exports = mongoose.model('product', productSchema);
+module.exports = mongoose.model("product", productSchema);

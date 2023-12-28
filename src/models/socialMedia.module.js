@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const socialMediaSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['instagram', 'tiktok', 'whatsapp', 'facebook'],
+    enum: ["instagram", "tiktok", "whatsapp", "facebook"],
   },
   url: {
     type: String,
@@ -19,7 +19,7 @@ const socialMediaSchema = new mongoose.Schema({
     default: Date.now,
   },
   type: mongoose.Schema.Types.ObjectId,
-  ref: 'website',
+  ref: "website",
 });
 
-module.exports = mongoose.model('socialMedia', socialMediaSchema);
+module.exports = mongoose.model("socialMedia", socialMediaSchema);

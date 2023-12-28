@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: "user",
   },
 });
 
-module.exports = mongoose.model('admin', adminSchema);
+module.exports = mongoose.model("admin", adminSchema);
