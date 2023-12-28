@@ -5,7 +5,7 @@ const carrierSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
-    maxLenght: 15,
+    maxLenght: 30,
     trim: true,
   },
   page: {
