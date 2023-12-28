@@ -1,14 +1,17 @@
 import mongoose from "mongoose";
 
-const multimediaSchema = new mongoose.Schema({
-  url: {
+const carrierSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLenght: 30,
+    trim: true,
+  },
+  page: {
     type: String,
     required: true,
     trim: true,
-  },
-  key: {
-    type: String,
-    default: null,
   },
   createdAt: {
     type: Date,
@@ -20,4 +23,4 @@ const multimediaSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("multimedia", multimediaSchema);
+module.express = mongoose.model("carrier", carrierSchema);

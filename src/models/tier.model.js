@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const tierSchema = new mongoose.Schema({
   name: {
@@ -34,3 +34,5 @@ const tierSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+module.express = mongoose.model("tier", tierSchema);

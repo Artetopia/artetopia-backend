@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -18,8 +18,8 @@ const categorySchema = new mongoose.Schema({
   },
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'craftsman',
+    ref: "craftsman",
   },
 });
 
-module.exports = mongoose.model('categoryl1', categorySchema);
+module.exports = mongoose.model("categoryl1", categorySchema);

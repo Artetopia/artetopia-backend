@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
   orderProducts: [
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'item',
+        ref: "item",
         required: true,
         trim: true,
       },
@@ -72,9 +72,23 @@ const orderSchema = new mongoose.Schema({
   },
   shippingSatus: {
     type: String,
-    enum: ['created', 'picked', 'shipped', 'delivered'],
-    default: 'created',
+    enum: ["created", "processed", "shipped", "delivered"],
+    default: "created",
   },
+  trackingNumber: {
+    type: String,
+    trim: true,
+  },
+  carrier: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "carrier",
+  },
+  trackingImage: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "multimedia",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -85,12 +99,12 @@ const orderSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'feedback',
+    ref: "feedback",
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: "user",
   },
 });
 
-module.exports = mongoose.model('order', orderSchema);
+module.exports = mongoose.model("order", orderSchema);

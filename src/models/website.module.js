@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const websiteSchema = new mongoose.Schema({
   name: {
@@ -17,11 +17,11 @@ const websiteSchema = new mongoose.Schema({
   },
   images: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'multimedia',
+    ref: "multimedia",
   },
   video: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'multimedia',
+    ref: "multimedia",
   },
   sections: [
     {
@@ -40,7 +40,7 @@ const websiteSchema = new mongoose.Schema({
       },
       backgroundImage: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'multimedia',
+        ref: "multimedia",
       },
     },
   ],
@@ -54,12 +54,12 @@ const websiteSchema = new mongoose.Schema({
   },
   template: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'template',
+    ref: "template",
   },
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'craftsman',
+    ref: "craftsman",
   },
 });
 
-module.exports = mongoose.model('website', websiteSchema);
+module.exports = mongoose.model("website", websiteSchema);

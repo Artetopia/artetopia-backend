@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const templateSchema = {
   name: {
     type: String,
-    enum: ['A', 'B'],
+    enum: ["A", "B"],
     required: true,
   },
   hasSections: {
@@ -22,4 +22,4 @@ const templateSchema = {
   },
 };
 
-module.express = mongoose.model('template', templateSchema);
+module.express = mongoose.model("template", templateSchema);
