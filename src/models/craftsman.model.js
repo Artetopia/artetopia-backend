@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const craftsmanSchema = new mongoose.Schema({
   state: {
@@ -15,7 +15,7 @@ const craftsmanSchema = new mongoose.Schema({
   templateId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "tempmlate",
+      ref: "template",
     },
   ],
   templateColorsId: [
@@ -33,7 +33,7 @@ const craftsmanSchema = new mongoose.Schema({
   categories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "categoryl1",
+      ref: "category",
     },
   ],
   shipment: {
