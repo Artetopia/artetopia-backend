@@ -9,7 +9,7 @@ const DB_NAME = process.env.DB_NAME;
 
 mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`)
 .then(() => {
-    console.log("database connected");
+    console.log("database connected Artetopia");
     server.listen(8080, () => {
         console.log("server listening on port 8080");
     });
