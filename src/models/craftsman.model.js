@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const craftsmanSchema = new mongoose.Schema({
   state: {
     type: String,
-    required: true,
+    // required: true,
     minLength: 6,
     maxLenght: 19,
     trim: true,
@@ -38,20 +38,20 @@ const craftsmanSchema = new mongoose.Schema({
   ],
   shipment: {
     type: Boolean,
-    required: true,
+    // required: true,
   },
   accountIdStripe: {
     type: String,
-    required: true,
+    // required: true,
   },
   isCrafstman: {
     type: String,
     enum: ["process", "accepted", "declined"],
-    required: true,
+    // required: true,
   },
   step: {
     type: Number,
-    required: true,
+    // required: true,
   },
   createdAt: {
     type: Date,
