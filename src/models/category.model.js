@@ -16,10 +16,6 @@ const categorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  craftsman: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "craftsman",
-  },
 });
 
 module.exports = mongoose.model("category", categorySchema);
