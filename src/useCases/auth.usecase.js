@@ -48,6 +48,6 @@ async function login (email, password) {
 
 module.exports = {
     login,
-    generate,
+    // generate,
     // register
 } 
