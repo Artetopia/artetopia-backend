@@ -38,8 +38,7 @@ router.post("/register", async (request, response) => {
       data: { user: userCreated },
     });
   } catch (error) {
-    const status = error.email === "Error de validación" ? 400 : 500;
-    response.status(status);
+    response.status(error.status || 500);
     response.json({
       message: "Algo salió mal",
       error: error.message,

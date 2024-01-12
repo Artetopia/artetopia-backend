@@ -13,7 +13,6 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minLength: 40,
-    maxLength: 160,
   },
   inventory: {
     type: Number,

@@ -14,7 +14,7 @@ async function login(email, password) {
     console.log("email no encontrado: ", email);
     throw new createError(401, "El correo o la contraseña son incorrectas 2");
   }
-
+  
   roles.push("User");
 
   const passwordValidate = bcrypt.verify(user.password, password);
