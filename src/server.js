@@ -14,9 +14,9 @@ app.use("/auth", AuthRouter);
 app.use("/registerCraftsman", RegisterCraftmanRouter);
 
 app.get("/", (request, response) => {
-    response.json({
-        message: "Artetopia API"
-    });
+  response.json({
+    message: "Artetopia API",
+  });
 });
 
 module.exports = app;

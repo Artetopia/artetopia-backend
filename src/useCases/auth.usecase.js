@@ -1,63 +1,66 @@
 const User = require("../models/user.model");
-const Craftman = require("../models/craftsman.model");
+const Craftsman = require("../models/craftsman.model");
 const Admin = require("../models/admin.model");
 const createError = require("http-errors");
 const bcrypt = require("../lib/bcrypt");
 const jwt = require("../lib/jwt");
 
-async function login (email, password) {
+async function login(email, password) {
+  let roles = [];
 
-    let roles = [];
+  const user = await User.findOne({ email: email });
 
-    const user = await User.findOne({email: email});
+  if (!user) {
+    console.log("email no encontrado: ", email);
+    throw new createError(401, "El correo o la contraseña son incorrectas 2");
+  }
+  
+  roles.push("User");
 
-    if(!user) {
-        throw new createError(401, "El correo o la contraseña son incorrectas 2");
-    }
+  const passwordValidate = bcrypt.verify(user.password, password);
 
-    roles.push("User");
+  if (!passwordValidate) {
+    throw new createError(401, "El correo o la contraseña son incorrectas 1");
+  }
 
-    const passwordValidate = bcrypt.verify(user.password, password);
+  const craftsman = await Craftsman.findOne({ user: user._id });
+  if (craftsman) {
+    roles.push("Craftsman");
+  }
 
-    if(!passwordValidate) {
-        throw new createError(401, "El correo o la contraseña son incorrectas 1");
-    }
+  const admin = await Admin.findOne({ user: user._id });
+  if (admin) {
+    roles.push("Admin");
+  }
 
-    const craftman = await Craftman.findOne({user: user._id});
-     if(craftman) {
-        roles.push("Craftman");
-     }
-
-     const admin = await Admin.findOne({user: user._id});
-     if (admin) {
-        roles.push("Admin");
-     }
-
-     return jwt.sign({user: user._id, roles});
+  return jwt.sign({ user: user._id, roles });
 }
 
-async function register (userObject) {
-    const user = await User.findOne({email: userObject.email});
+async function register(userData) {
+  const userExists = await User.findOne({ email: userData.email });
+  if (userExists) throw new createError(412, "El usuario ya existe");
 
-    if(user) {
-        throw new createError(401, "El correo o la contraseña son incorrectas 2");
+  const passwordRegExp = new RegExp(
+    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$"
+  );
+  if (!passwordRegExp.test(userData.password)) {
+    throw new createError(400, "Contraseña débil");
+  }
+  userData.password = bcrypt.encrypt(userData.password);
+
+  const newUser = await User.create(userData);
+
+  if (userData.userType === "Craftsman") {
+    const craftsman = await Craftsman.create({ user: newUser._id });
+    if (!craftsman) {
+      throw new createError(400, "No se pudo crear el usuario artesano");
     }
+  }
 
-    const passwordHash = bcrypt.encrypt(userObject.password);
-    userObject.password = passwordHash;
-
-    const newUser = await User.create(userObject);
-    if(userObject.userType === "Craftman") {
-        const craftman = Craftman.create({user: newUser._id});
-        if(!craftman) {
-            throw new CreateError(400, "No se pudo crear el artesano")
-        }
-    }
-    return newUser;
-
+  return newUser;
 }
 
 module.exports = {
-    login,
-    register
-} 
+  login,
+  register,
+};
