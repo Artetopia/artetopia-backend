@@ -23,15 +23,22 @@ router.post("/login", async (request, response) => {
     }
 });
 
-// router.post("/register", async (request, response) => {
-//     const userCreate = await authUseCase.register(request.body);
-//     response.status(201);
-//     response.json({
-//         message: "Usuario creado",
-//         data: {
-//             user: userCreate
-//         }
-//     });
-// });
+router.post("/register", async (request, response) => {
+    try {
+        const userCreate = await authUseCase.register(request.body);
+        response.json({
+            message: "Usuario creado",
+            data: {
+                user: userCreate
+            }
+        });
+    } catch(error) {
+        response.status(error.status || 500);
+        response.json({
+            message: "Algo salio mal",
+            error: error.message,
+        });
+    }
+});
 
 module.exports = router;

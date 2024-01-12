@@ -12,7 +12,6 @@ async function login (email, password) {
     const user = await User.findOne({email: email});
 
     if(!user) {
-        console.log("email no encontrado: ", email);
         throw new createError(401, "El correo o la contraseña son incorrectas 2");
     }
 
@@ -37,17 +36,28 @@ async function login (email, password) {
      return jwt.sign({user: user._id, roles});
 }
 
-// async function register (userObject) {
-//     const passwordHash = bcrypt.encrypt(userObject.password);
-//     userObject.password = passwordHash;
+async function register (userObject) {
+    const user = await User.findOne({email: userObject.email});
 
-//     const newUser = await User.create(userObject);
-//     return newUser;
+    if(user) {
+        throw new createError(401, "El correo o la contraseña son incorrectas 2");
+    }
 
-// }
+    const passwordHash = bcrypt.encrypt(userObject.password);
+    userObject.password = passwordHash;
+
+    const newUser = await User.create(userObject);
+    if(userObject.userType === "Craftman") {
+        const craftman = Craftman.create({user: newUser._id});
+        if(!craftman) {
+            throw new CreateError(400, "No se pudo crear el artesano")
+        }
+    }
+    return newUser;
+
+}
 
 module.exports = {
     login,
-    generate,
-    // register
+    register
 } 
