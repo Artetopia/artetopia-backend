@@ -8,12 +8,12 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use("/auth", AuthRouter);
+app.use("/auth", AuthRouter); // usar camelCase en 'authRouter'?
 
 app.get("/", (request, response) => {
-    response.json({
-        message: "Artetopia API"
-    });
+  response.json({
+    message: "Artetopia API",
+  });
 });
 
 module.exports = app;
