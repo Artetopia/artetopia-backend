@@ -15,10 +15,12 @@ const websiteSchema = new mongoose.Schema({
     minLength: 40,
     maxLength: 160,
   },
-  images: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "multimedia",
-  },
+  images: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "multimedia",
+    },
+  ],
   video: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "multimedia",
