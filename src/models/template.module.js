@@ -6,11 +6,20 @@ const templateSchema = {
     enum: ["A", "B"],
     required: true,
   },
-  hasSections: {
-    type: Boolean,
+  primaryColor: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  hasVideo: {
-    type: Boolean,
+  secondaryColor: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  tertiaryColor: {
+    type: String,
+    required: true,
+    trim: true,
   },
   createdAt: {
     type: Date,

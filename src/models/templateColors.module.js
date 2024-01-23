@@ -6,24 +6,12 @@ const templateColorsSchema = {
     required: true,
     trim: true,
   },
-  primaryColor: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  secondaryColor: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  tertiaryColor: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   hasVideo: {
     type: Boolean,
     required: true,
+  },
+  hasSections: {
+    type: Boolean,
   },
   isActive: {
     type: Boolean,
@@ -43,4 +31,4 @@ const templateColorsSchema = {
   },
 };
 
-module.express = mongoose.model("template", templateSchema);
+module.exports = mongoose.model("templateColors", templateColorsSchema);

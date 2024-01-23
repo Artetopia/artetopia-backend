@@ -3,7 +3,7 @@ const Template = require("../models/template.module");
 const craftsman = require("../models/craftsman.model");
 const createError = require("http-errors");
 
-async function create(templateData) {
+async function asignTemplate(templateData) {
     if(!mongoose.isValidObjectId(templateData.craftsman)) {
         throw new createError(400, "Invalid craftsman id")
     }
@@ -15,6 +15,6 @@ async function create(templateData) {
 }
 
 module.exports = {
-    create,
+    asignTemplate,
 
 }

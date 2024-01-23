@@ -6,7 +6,7 @@ const selectTemplate = require("../useCases/selectTemplate.usecase");
 router.post("/", async (request, response) => {
     try {
       const templateSelected = request.body;
-      const template = await selectTemplate.create(templateSelected);
+      const template = await selectTemplate.asignTemplate(templateSelected);
       response.status(200);
       response.json({
         message: "Template selected",
