@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const templateColorsSchema = {
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+const aditionalInfoSchema = {
+  // name: {
+  //   type: String,
+  //   required: true,
+  //   trim: true,
+  // },
   hasVideo: {
     type: Boolean,
     required: true,
@@ -31,4 +31,4 @@ const templateColorsSchema = {
   },
 };
 
-module.exports = mongoose.model("templateColors", templateColorsSchema);
+module.exports = mongoose.model("templateColors", aditionalInfoSchema);

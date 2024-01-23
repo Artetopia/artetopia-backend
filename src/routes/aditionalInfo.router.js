@@ -1,17 +1,18 @@
 const express = require('express')
 const router = express.Router();
 const auth = require("../middleware/auth")
-const selectTemplate = require("../useCases/selectTemplate.usecase");
+const aditionalInfo = require("../useCases/aditionalInfo.usecase");
 
 router.post("/", async (request, response) => {
     try {
-      const templateSelected = request.body;
-      const templateAndColors = await selectTemplate.asignTemplate(templateSelected);
+      const videoAndSectionsInfo = request.body;
+      console.log("req body", videoAndSectionsInfo)
+      const aditionalInfoTemplateB = await aditionalInfo.asignAditionalInfo(videoAndSectionsInfo);
       response.status(200);
       response.json({
-        message: "Template and colors selected",
+        message: "Video and sections updated",
         data: {
-          templateCustom: templateAndColors,
+          tvideoAndSections: aditionalInfoTemplateB,
         },
       });
     } catch (error) {       

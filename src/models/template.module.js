@@ -21,6 +21,10 @@ const templateSchema = {
     required: true,
     trim: true,
   },
+  craftsman: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "craftsman",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
