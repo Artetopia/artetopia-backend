@@ -149,6 +149,47 @@ const uniqueValues = ObjectIdImagesString.filter((value) => !productObject.image
   return productUpdated;
 }
 
+async function deleteProduct(productId) {
+
+  console.log("productId", productId);
+  if(!mongoose.isValidObjectId(productId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const productExist = await Product.findById(productId);
+
+  if(!productExist) {
+    throw new createError(404, "El producto no existe");
+  }
+
+  const images = await Promise.all(productExist.images.map(async (image) => {
+    const objectIdMultimedia = new mongoose.Types.ObjectId(image);
+    const multimedia = await Multimedia.findById(objectIdMultimedia);
+    if(!multimedia) {
+      throw new createError(400, "No se encontro una imagen");
+    }
+    const deletedFile = await s3Service.s3DeleteFile(multimedia);
+    if(deletedFile) {
+      const productUpdated = await Product.findByIdAndUpdate(productExist._id, {$pull: {images: multimedia._id}});
+      if(productUpdated) {
+        const deleteMultimedia = await Multimedia.findByIdAndDelete(multimedia._id);
+        if(!deleteMultimedia) {
+          throw new createError(400, "Error al eliminar la imagen");
+        }
+      }
+    }
+  }));
+
+  const product = await Product.findById(productId);
+  if(product.images.length > 0) {
+    throw new createError(400, "El producto no se puede eliminar, ya que cuenta imagenes existentes");
+  }
+
+  constProductDeleted = await Product.findByIdAndDelete(productId);
+  return constProductDeleted;
+  
+}
+
 async function getAllProductsByCraftman(userId) {
   if (!mongoose.isValidObjectId(userId)) {
     throw new createError(400, "Id invalido");
@@ -168,5 +209,6 @@ async function getAllProductsByCraftman(userId) {
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
-  updateProduct
+  updateProduct,
+  deleteProduct
 };
