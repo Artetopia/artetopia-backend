@@ -3,7 +3,7 @@ const registerArtesanoUseCase = require("../useCases/registerArtesano.usecase");
 const auth = require("../middleware/auth.middleware");
 const router = express.Router();
 
-router.post("/createProduct", auth, async (request, response) => {
+router.post("/product", auth, async (request, response) => {
     try {
         const productCreated = await registerArtesanoUseCase.createProduct(request.user, request.body)
         // console.log(request.user);
@@ -38,7 +38,7 @@ router.get("/getAllProductsByCraftman", auth, async (request, response) => {
             error: error.message,
         });
     }
-})
+});
 
 router.patch("/UpdateProduct/:productId", auth, async (request, response) => {
     try {
@@ -58,6 +58,25 @@ router.patch("/UpdateProduct/:productId", auth, async (request, response) => {
             error: error.message,
         });
     }
-})
+});
+
+router.delete("/product/:productId", auth, async (request, response) => {
+    try {
+        const productId = request.params.productId;
+        const productDeleted = await registerArtesanoUseCase.deleteProduct(productId);
+        response.json({
+            message: "Producto eliminado",
+            data: {
+                product: productDeleted
+            }
+        });
+    } catch (error) {
+        response.status(error.status || 500);
+        response.json({
+            message: "Algo salio mal",
+            error: error.message,
+        });
+    }
+});
 
 module.exports = router;
