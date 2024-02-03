@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const AuthRouter = require("./routes/auth.router");
 const CraftmanRouter = require("./routes/craftsmen.router");
+const TemplateColorsRouter = require("./routes/templateColors.router");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({limit: '50mb'}));
 
 app.use("/auth", AuthRouter);
 app.use("/craftman", CraftmanRouter);
+app.use("/templateColors", TemplateColorsRouter);
 
 app.get("/", (request, response) => {
   response.json({
