@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const multer = require("multer");
 const aws = require("aws-sdk");
 const mongoose = require("mongoose");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const s3Service = require("../lib/s3Service");
 
@@ -206,9 +207,116 @@ async function getAllProductsByCraftman(userId) {
   return products;
 }
 
+async function getBankInformation(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const craftmanObject = new mongoose.Types.ObjectId(userId);
+
+  const user = await User.findById(craftmanObject);
+
+  if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftman = await Craftman.findOne({user: craftmanObject});
+
+  if(!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  if(!craftman.accountIdStripe) {
+    const accountService = await stripe.accounts.create({
+      type: "express",
+      country: "MX",
+      email: user.email,
+      capabilities: {
+        card_payments: {
+          requested: true,
+        },
+        transfers: {
+          requested: true,
+        },
+      },
+    });
+
+    const craftmanUpdated = await Craftman.findByIdAndUpdate(craftman._id, {accountIdStripe: accountService.id});
+    if(!craftmanUpdated) {
+      throw new createError(400, "Error al actualizar el artesano");
+    }
+
+    const accountLink = await stripe.accountLinks.create({
+      account: accountService.id,
+      refresh_url: 'http://localhost:5173/',
+      return_url: 'http://localhost:5173/',
+      type: 'account_onboarding',
+    });
+
+    return {
+      object: accountLink.object,
+      url: accountLink.url
+    }
+  } else {
+    const accountService = await stripe.accounts.retrieve(craftman.accountIdStripe);
+    if(accountService.details_submitted) {
+      const loginLink = await stripe.accounts.createLoginLink(craftman.accountIdStripe);
+      return {
+        object: loginLink.object,
+        url: loginLink.url
+      }
+    } else {
+      const accountLink = await stripe.accountLinks.create({
+        account: craftman.accountIdStripe,
+        refresh_url: 'http://localhost:5173/',
+        return_url: 'http://localhost:5173/',
+        type: 'account_onboarding',
+      });
+
+      return {
+        object: accountLink.object,
+        url: accountLink.url
+      }
+    }
+  }
+}
+
+async function setProgressCraftman(userId, step) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const craftmanObject = new mongoose.Types.ObjectId(userId);
+
+  const user = await User.findById(craftmanObject);
+
+  if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftman = await Craftman.findOne({user: craftmanObject});
+
+  if(!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  if(step > 8) {
+    throw new createError(400, "Error, porfavor contactar al administrador");
+  }
+
+  if(craftman.step <= step) {
+    const craftmanUpdated = await Craftman.findByIdAndUpdate(craftman._id, {step}, { new: true });
+    return craftmanUpdated;
+  } else {
+    return craftman;
+  }
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getBankInformation,
+  setProgressCraftman
 };
