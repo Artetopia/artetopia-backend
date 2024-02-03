@@ -79,4 +79,43 @@ router.delete("/product/:productId", auth, async (request, response) => {
     }
 });
 
+router.get("/bankAccount", auth, async (request, response) => {
+    try {
+        const bankAccount = await CraftmanUseCase.getBankInformation(request.user);
+        response.json({
+            message: "Cuenta de banco creada",
+            data: {
+                bankAccount: bankAccount
+            }
+        });
+    } catch (error) {
+        response.status(error.status || 500);
+        response.json({
+            message: "Algo salio mal",
+            error: error.message,
+        });
+    }
+});
+
+router.patch("/registrationProgress/:step", auth, async(request, response) => {
+    try {
+        const step = request.params.step;
+        const stepResult = await CraftmanUseCase.setProgressCraftman(request.user, step);
+        response.json({
+            message: "Se asigno correctamente el progreso",
+            data: {
+                craftman: stepResult
+            }
+        });
+
+    } catch(error) {
+        response.status(error.status || 500);
+        response.json({
+            message: "Algo salio mal",
+            error: error.message,
+        });
+    }
+})
+
+
 module.exports = router;
