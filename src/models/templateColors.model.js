@@ -1,25 +1,25 @@
 const mongoose = require("mongoose");
 
-const tierSchema = new mongoose.Schema({
+const templateColorsSchema = {
   name: {
     type: String,
     required: true,
     trim: true,
   },
-  description: {
+  primaryColor: {
     type: String,
     required: true,
     trim: true,
-    minLength: 20,
-    maxLength: 80,
   },
-  comission: {
-    type: Number,
+  secondaryColor: {
+    type: String,
     required: true,
     trim: true,
   },
-  expirationDate: {
-    type: Date,
+  tertiaryColor: {
+    type: String,
+    required: true,
+    trim: true,
   },
   isActive: {
     type: Boolean,
@@ -33,6 +33,6 @@ const tierSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+};
 
-module.exports = mongoose.model("tier", tierSchema);
+module.exports = mongoose.model("templateColors", templateColorsSchema);

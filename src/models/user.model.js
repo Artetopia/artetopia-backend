@@ -14,21 +14,21 @@ const userSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
     minLength: 2,
     maxLength: 32,
   },
   surname: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
     minLength: 2,
     maxLength: 32,
   },
   phone: {
     type: String,
-    required: true,
+    // required: true,
     minLength: 10,
     maxLength: 10,
     match: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
   },
   customerIdStripe: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   createdAt: {
