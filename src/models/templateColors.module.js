@@ -21,10 +21,6 @@ const templateColorsSchema = {
     required: true,
     trim: true,
   },
-  hasVideo: {
-    type: Boolean,
-    required: true,
-  },
   isActive: {
     type: Boolean,
     required: true,
@@ -36,10 +32,6 @@ const templateColorsSchema = {
   updatedAt: {
     type: Date,
     default: Date.now,
-  },
-  craftsman: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "craftsman",
   },
 };
 
