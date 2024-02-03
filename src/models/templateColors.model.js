@@ -35,4 +35,4 @@ const templateColorsSchema = {
   },
 };
 
-module.express = mongoose.model("template", templateSchema);
+module.exports = mongoose.model("templateColors", templateColorsSchema);

@@ -35,4 +35,4 @@ const tierSchema = new mongoose.Schema({
   },
 });
 
-module.express = mongoose.model("tier", tierSchema);
+module.exports = mongoose.model("tier", tierSchema);
