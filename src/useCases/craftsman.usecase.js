@@ -1,26 +1,21 @@
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-// const User = require("../models/user.model");
-// const Craftman = require("../models/craftsman.model");
-// const Admin = require("../models/admin.model");
+const User = require("../models/user.model");
+const Craftsman = require("../models/craftsman.model");
+const Category = require("../models/category.model");
 
-// const createError = require("http-error");
-// const bycrypt = require("../lib/bcrypt");
+const createError = require("http-error");
+const bycrypt = require("../lib/bcrypt");
 
-// async function create(userData) {
-//   const userExists = await User.findOne({ email: userData.email });
-//   if (userExists) throw new createError(412, "El usuario ya existe");
+async function getAllCategories(name, craftsman) {
+  const filters = {};
+  if (name) {
+    filters.name = new RegExp(name, "i");
+  }
+  if (craftsman && mongoose.isValidObjectId(craftsman)) {
+    filters.craftsman = craftsman;
+  }
+  return await Category.find(filters).populate("craftsman");
+}
 
-//   const passwordRegExp = new RegExp(
-//     "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$"
-//   );
-//   if (!passwordRegExp.test(userData.password)) {
-//     throw new createError(400, "Contraseña débil");
-//   }
-//   userData.password = bycrypt.encrypt(userData.password);
-
-//   const newUser = await User.create(userData);
-//   return newUser;
-// }
-
-// module.exports = { create };
+module.exports = { getAllCategories };
