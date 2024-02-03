@@ -23,4 +23,4 @@ const carrierSchema = new mongoose.Schema({
   },
 });
 
-module.express = mongoose.model("carrier", carrierSchema);
+module.exports = mongoose.model("carrier", carrierSchema);
