@@ -344,8 +344,23 @@ async function setProgressCraftman(userId, step) {
   }
 }
 
+// async function getAllCraftsmen() {
+//   return await Craftman.find();
+// }
+
+// async function getAllCraftsmen() {
+//   const allCraftsmen = await Craftman.find().populate({
+//     path: "categories",
+//     select: "name",
+//   });
+//   return allCraftsmen;
+// }
+
 async function getAllCraftsmen() {
-  return await Craftman.find();
+  const allCraftsmen = await Craftman.find({ isCraftsman: "accepted" }).select(
+    "categories isCraftsman user websiteId"
+  );
+  return allCraftsmen;
 }
 
 module.exports = {
