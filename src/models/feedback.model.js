@@ -31,7 +31,7 @@ const feedbackSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  attachment: {
+  craftsman: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "craftsman",
   },
