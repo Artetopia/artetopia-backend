@@ -4,7 +4,7 @@ const orders = require("../useCases/delivery.usecase");
 
 const router = express.Router();
 
-router.get("/orders/:orderId/delivery-status", async (request, response) => {
+router.get("/orders/:orderId/deliveryStatus", async (request, response) => {
   const orderId = request.params.orderId;
 
   try {

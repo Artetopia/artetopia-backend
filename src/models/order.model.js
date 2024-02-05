@@ -97,7 +97,7 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  user: {
+  feedback: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "feedback",
   },
