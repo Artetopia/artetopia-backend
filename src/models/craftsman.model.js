@@ -44,7 +44,7 @@ const craftsmanSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  isCrafstman: {
+  isCraftsman: {
     type: String,
     enum: ["process", "accepted", "declined"],
     // required: true,
