@@ -17,7 +17,7 @@ const feedbackSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    required: true,
+    // required: true,
   },
   attachment: {
     type: mongoose.Schema.Types.ObjectId,
