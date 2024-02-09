@@ -10,6 +10,8 @@ const Craftman = require("../models/craftsman.model");
 const User = require("../models/user.model");
 const Product = require("../models/product.model");
 const Multimedia = require("../models/multimedia.model");
+const Template = require("../models/template.model");
+const TemplateColor = require("../models/templateColors.model");
 const Website = require("../models/website.model");
 const Feedback = require("../models/feedback.model");
 
@@ -346,6 +348,73 @@ async function setProgressCraftman(userId, step) {
   }
 }
 
+async function setTemplateAndColor(userId, objectCraftman) {
+  const { template, templateColorId } = objectCraftman;
+
+  if(!mongoose.isValidObjectId(templateColorId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const craftmanObject = new mongoose.Types.ObjectId(userId);
+
+  const user = await User.findById(craftmanObject);
+
+  if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftman = await Craftman.findOne({user: craftmanObject});
+
+  if(!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  const templateObject = await Template.findOne({name: template});
+
+  if(!templateObject) {
+    throw new createError(404, "Template no encontrado");
+  }
+
+  const templateColor = await TemplateColor.findById(templateColorId);
+
+  if(!templateColor) {
+    throw new createError(404, "Template color no encontrado");
+  }
+
+  const craftmanUpdated = await Craftman.findByIdAndUpdate(craftman._id, {templateId: templateObject._id, templateColorsId: templateColor._id}, { new: true })
+  .populate({path: "templateId", select: "id name hasSections hasVideo"})
+  .populate("templateColorsId")
+  .populate({path: "productsId", populate: {path: "images"}})
+  .populate("categories")
+  .populate("user");
+
+  return craftmanUpdated;
+}
+
+async function getTemplateColor(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const craftman = await Craftman.findOne({user: userId}).populate({path: "templateId", select: "id name hasSections hasVideo"}).populate({path: "templateColorsId", select: "id primaryColor secondaryColor tertiaryColor isActive"});
+
+
+  if(!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  const craftmanOptions = {
+    id: craftman._id,
+    template: craftman.templateId,
+    templateColor: craftman.templateColorsId
+  }
+
+  return craftmanOptions;
+}
 async function getAllCraftsmen() {
   const allCraftsmen = await Craftman.find(
     { isCraftsman: "accepted" },
@@ -381,6 +450,8 @@ module.exports = {
   deleteProduct,
   getBankInformation,
   setProgressCraftman,
+  setTemplateAndColor,
+  getTemplateColor,
   getAllCraftsmen,
   getAllCraftsmenAuth,
 };
