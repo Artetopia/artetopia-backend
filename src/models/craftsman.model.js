@@ -69,6 +69,10 @@ const craftsmanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "tier",
   },
+  feedback: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "feedback",
+  },
 });
 
 module.exports = mongoose.model("craftsman", craftsmanSchema);

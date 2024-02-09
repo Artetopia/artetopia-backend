@@ -11,7 +11,7 @@ const User = require("../models/user.model");
 const Product = require("../models/product.model");
 const Multimedia = require("../models/multimedia.model");
 const Website = require("../models/website.model");
-const Feedbacl = require("../models/feedback.model");
+const Feedback = require("../models/feedback.model");
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -362,22 +362,15 @@ async function getAllCraftsmen() {
 }
 
 async function getAllCraftsmenAuth() {
-  const allCraftsmenAuth = await Craftman.find(
-    { isCraftsman: "accepted" }
-    // { websiteId: "website" },
-    // { feedbackId: "feedback" }
-  )
-    .select("websiteId categories isCraftsman user feedbackId")
+  const allCraftsmenAuth = await Craftman.find({ isCraftsman: "accepted" })
+    .select("websiteId categories isCraftsman user feedback")
     .populate({ path: "categories", select: "name" })
     .populate({ path: "user", select: "avatar" })
+    .populate({ path: "feedback", select: "rating" })
     .populate({
       path: "websiteId",
       select: "name sections.backgroundImage",
     });
-  // .populate({
-  //   path: "feedbackId",
-  //   select: "rating",
-  // });
   return allCraftsmenAuth;
 }
 
