@@ -369,7 +369,7 @@ async function getAllCraftsmenAuth() {
     .populate({ path: "feedback", select: "rating" })
     .populate({
       path: "websiteId",
-      select: "name sections.backgroundImage",
+      select: "name",
     });
   return allCraftsmenAuth;
 }
