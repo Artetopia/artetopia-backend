@@ -415,7 +415,6 @@ async function getTemplateColor(userId) {
 
   return craftmanOptions;
 }
-
 async function getAllCraftsmen() {
   const allCraftsmen = await Craftman.find(
     { isCraftsman: "accepted" },
