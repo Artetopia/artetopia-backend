@@ -12,18 +12,14 @@ const craftsmanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "website",
   },
-  templateId: [
-    {
+  templateId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "template",
     },
-  ],
-  templateColorsId: [
-    {
+  templateColorsId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "templateColors",
     },
-  ],
   productsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
