@@ -351,7 +351,7 @@ async function setProgressCraftman(userId, step) {
 async function setTemplateAndColor(userId, objectCraftman) {
   const { template, templateColorId } = objectCraftman;
 
-  if(!mongoose.isValidObjectId(templateColorId)) {
+  if (!mongoose.isValidObjectId(templateColorId)) {
     throw new createError(400, "Id invalido");
   }
 
@@ -363,34 +363,38 @@ async function setTemplateAndColor(userId, objectCraftman) {
 
   const user = await User.findById(craftmanObject);
 
-  if(!user) {
+  if (!user) {
     throw new createError(404, "Usuario no encontrado");
   }
 
-  const craftman = await Craftman.findOne({user: craftmanObject});
+  const craftman = await Craftman.findOne({ user: craftmanObject });
 
-  if(!craftman) {
+  if (!craftman) {
     throw new createError(404, "Craftman no encontrado");
   }
 
-  const templateObject = await Template.findOne({name: template});
+  const templateObject = await Template.findOne({ name: template });
 
-  if(!templateObject) {
+  if (!templateObject) {
     throw new createError(404, "Template no encontrado");
   }
 
   const templateColor = await TemplateColor.findById(templateColorId);
 
-  if(!templateColor) {
+  if (!templateColor) {
     throw new createError(404, "Template color no encontrado");
   }
 
-  const craftmanUpdated = await Craftman.findByIdAndUpdate(craftman._id, {templateId: templateObject._id, templateColorsId: templateColor._id}, { new: true })
-  .populate({path: "templateId", select: "id name hasSections hasVideo"})
-  .populate("templateColorsId")
-  .populate({path: "productsId", populate: {path: "images"}})
-  .populate("categories")
-  .populate("user");
+  const craftmanUpdated = await Craftman.findByIdAndUpdate(
+    craftman._id,
+    { templateId: templateObject._id, templateColorsId: templateColor._id },
+    { new: true }
+  )
+    .populate({ path: "templateId", select: "id name hasSections hasVideo" })
+    .populate("templateColorsId")
+    .populate({ path: "productsId", populate: { path: "images" } })
+    .populate("categories")
+    .populate("user");
 
   return craftmanUpdated;
 }
@@ -400,41 +404,52 @@ async function getTemplateColor(userId) {
     throw new createError(400, "Id invalido");
   }
 
-  const craftman = await Craftman.findOne({user: userId}).populate({path: "templateId", select: "id name hasSections hasVideo"}).populate({path: "templateColorsId", select: "id primaryColor secondaryColor tertiaryColor isActive"});
+  const craftman = await Craftman.findOne({ user: userId })
+    .populate({ path: "templateId", select: "id name hasSections hasVideo" })
+    .populate({
+      path: "templateColorsId",
+      select: "id primaryColor secondaryColor tertiaryColor isActive",
+    });
 
-
-  if(!craftman) {
+  if (!craftman) {
     throw new createError(404, "Craftman no encontrado");
   }
 
   const craftmanOptions = {
     id: craftman._id,
     template: craftman.templateId,
-    templateColor: craftman.templateColorsId
-  }
+    templateColor: craftman.templateColorsId,
+  };
 
   return craftmanOptions;
 }
 async function getAllCraftsmen() {
-  const allCraftsmen = await Craftman.find(
-    { isCraftsman: "accepted" },
-    { websiteId: "website" }
-  )
-    .select("categories isCraftsman user websiteId")
+  const allCraftsmen = await Craftman.find({ isCraftsman: "accepted" })
+    .select("categories craftsman isCraftsman user websiteId")
+    .populate({ path: "banner", select: "url" })
     .populate({ path: "categories", select: "name" })
-    .populate({ path: "user", select: "avatar" })
+    .populate({
+      path: "user",
+      select: "avatar",
+      populate: { path: "avatar", select: "url" },
+    })
     .populate({
       path: "websiteId",
-      select: "name images sections.backgroundImage",
+      select: "name images",
+      populate: { path: "images", select: "url" },
     });
   return allCraftsmen;
 }
 
 async function getAllCraftsmenAuth() {
   const allCraftsmenAuth = await Craftman.find({ isCraftsman: "accepted" })
-    .select("websiteId categories isCraftsman user feedback")
+    .select(" categories isCraftsman craftsman feedback user websiteId")
     .populate({ path: "categories", select: "name" })
-    .populate({ path: "user", select: "avatar" })
+    .populate({
+      path: "user",
+      select: "avatar",
+      populate: { path: "avatar", select: "url" },
+    })
     .populate({ path: "feedback", select: "rating" })
     .populate({
       path: "websiteId",

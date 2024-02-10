@@ -126,41 +126,43 @@ router.patch("/registrationProgress/:step", auth, async (request, response) => {
   }
 });
 
-router.patch("/selectTemplate", auth, async(request, response) => {
-    try {
-        const selectTemplate = await CraftmanUseCase.setTemplateAndColor(request.user, request.body);
-        response.json({
-            message: "Se guardo correctamente la información",
-            data: {
-                craftman: selectTemplate
-            }
-        });
-
-    } catch(error) {
-        response.status(error.status || 500);
-        response.json({
-            message: "Algo salio mal",
-            error: error.message,
-        });
-    }
+router.patch("/selectTemplate", auth, async (request, response) => {
+  try {
+    const selectTemplate = await CraftmanUseCase.setTemplateAndColor(
+      request.user,
+      request.body
+    );
+    response.json({
+      message: "Se guardo correctamente la información",
+      data: {
+        craftman: selectTemplate,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
 });
 
-router.get("/selectTemplate", auth, async(request, response) => {
-    try {
-        const selectTemplate = await CraftmanUseCase.getTemplateColor(request.user);
-        response.json({
-            message: "Información traida con exito",
-            data: {
-                craftman: selectTemplate
-            }   
-        });
-    } catch(error) {
-        response.status(error.status || 500);
-        response.json({
-            message: "Algo salio mal",
-            error: error.message,
-        });
-    }
+router.get("/selectTemplate", auth, async (request, response) => {
+  try {
+    const selectTemplate = await CraftmanUseCase.getTemplateColor(request.user);
+    response.json({
+      message: "Información traida con exito",
+      data: {
+        craftman: selectTemplate,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
 });
 
 router.get("/allCraftsmen", async (request, response) => {
@@ -179,7 +181,7 @@ router.get("/allCraftsmen", async (request, response) => {
   }
 });
 
-router.get("/allCraftsmenAuth", auth, async (request, response) => {
+router.get("/allCraftsmenAuth", async (request, response) => {
   try {
     const allCraftsmenAuth = await CraftmanUseCase.getAllCraftsmenAuth();
     response.json({

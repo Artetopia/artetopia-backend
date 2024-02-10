@@ -13,13 +13,13 @@ const craftsmanSchema = new mongoose.Schema({
     ref: "website",
   },
   templateId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "template",
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "template",
+  },
   templateColorsId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "templateColors",
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "templateColors",
+  },
   productsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -57,17 +57,21 @@ const craftsmanSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  user: {
+  banner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "multimedia",
+  },
+  feedback: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "feedback",
   },
   tier: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "tier",
   },
-  feedback: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "feedback",
+    ref: "user",
   },
 });
 
