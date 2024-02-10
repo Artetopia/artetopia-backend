@@ -181,7 +181,7 @@ router.get("/allCraftsmen", async (request, response) => {
   }
 });
 
-router.get("/allCraftsmenAuth", async (request, response) => {
+router.get("/allCraftsmenAuth", auth, async (request, response) => {
   try {
     const allCraftsmenAuth = await CraftmanUseCase.getAllCraftsmenAuth();
     response.json({
