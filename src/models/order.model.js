@@ -70,7 +70,7 @@ const orderSchema = new mongoose.Schema({
   paymentIntentStripe: {
     type: String,
   },
-  shippingSatus: {
+  shippingStatus: {
     type: String,
     enum: ["created", "processed", "shipped", "delivered"],
     default: "created",

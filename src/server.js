@@ -4,6 +4,7 @@ const AuthRouter = require("../src/routes/auth.router");
 const CraftmanRouter = require("../src/routes/craftsmen.router");
 const CategoriesRouter = require("../src/routes/category.router");
 const templateColorsRouter = require("./routes/templateColors.router");
+const UserRouter = require("./routes/users.router");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/auth", AuthRouter);
 app.use("/craftman", CraftmanRouter);
 app.use("/categories", CategoriesRouter);
 app.use("/templateColors", templateColorsRouter);
+app.use("/user", UserRouter);
 
 app.get("/", (request, response) => {
   response.json({
