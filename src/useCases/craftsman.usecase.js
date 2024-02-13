@@ -211,8 +211,8 @@ async function deleteProduct(productId) {
     );
   }
 
-  constProductDeleted = await Product.findByIdAndDelete(productId);
-  return constProductDeleted;
+  const ProductDeleted = await Product.findByIdAndDelete(productId);
+  return ProductDeleted;
 }
 
 async function getAllProductsByCraftman(userId) {

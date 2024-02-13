@@ -105,6 +105,10 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
+  craftsman: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "craftsman",
+  }
 });
 
 module.exports = mongoose.model("order", orderSchema);
