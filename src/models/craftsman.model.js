@@ -73,10 +73,6 @@ const craftsmanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  orders: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "order",
-  },
 });
 
 module.exports = mongoose.model("craftsman", craftsmanSchema);
