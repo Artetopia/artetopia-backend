@@ -1,21 +1,21 @@
 const express = require("express");
-
-const users = require("../useCases/user.usecase");
-
+const UserUseCase = require("../useCases/user.usecase");
+const auth = require("../middleware/auth.middleware");
 const router = express.Router();
 
-router.get("/:orderId/deliveryStatus", async (request, response) => {
-  const { orderId } = request.params;
+router.get("/:orderId/shippingStatus", auth, async (request, response) => {
   try {
-    const orderDeliveryStatus = await users.getOrderDeliveryStatus(orderId);
+    const order = await UserUseCase.getOrderShippingStatus(
+      request.params.orderId
+    );
     response.json({
-      message: "order delivery status",
-      data: orderDeliveryStatus,
+      message: "Order delivery status",
+      data: { order: order },
     });
   } catch (error) {
     response.status(error.status || 500);
     response.json({
-      message: "Algo salio mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
