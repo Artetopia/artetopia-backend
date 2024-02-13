@@ -33,10 +33,6 @@ const userSchema = new mongoose.Schema({
     maxLength: 10,
     match: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
   },
-  banner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "multimedia",
-  },
   avatar: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "multimedia",
