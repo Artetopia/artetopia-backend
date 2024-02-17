@@ -12,8 +12,7 @@ const Product = require("../models/product.model");
 const Multimedia = require("../models/multimedia.model");
 const Template = require("../models/template.model");
 const TemplateColor = require("../models/templateColors.model");
-const Website = require("../models/website.model");
-const Feedback = require("../models/feedback.model");
+const Order = require("../models/order.model")
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -458,6 +457,27 @@ async function getAllCraftsmenAuth() {
   return allCraftsmenAuth;
 }
 
+async function getAllOrdersByCraftsman(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
+  if (!craftsman) {
+    throw new createError(404, "Craftsman no encontrado");
+  }
+
+  const orders = await Order.find({ craftsman: craftsman._id })
+
+  return orders;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -469,4 +489,5 @@ module.exports = {
   getTemplateColor,
   getAllCraftsmen,
   getAllCraftsmenAuth,
+  getAllOrdersByCraftsman
 };
