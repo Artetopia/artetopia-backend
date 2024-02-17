@@ -469,7 +469,7 @@ async function getAllOrdersByCraftsman(craftmanId) {
   }
 
   const orders = await Order.find({
-    craftsman: new mongoose.Types.ObjectId(craftsman._id)})
+    craftsman: new mongoose.Types.ObjectId(craftsman)})
 
   return orders;
 }
