@@ -197,9 +197,9 @@ router.get("/allCraftsmenAuth", auth, async (request, response) => {
   }
 });
 
-router.get("/:craftmanId/orders", auth, async (request, response) => {
+router.get("/orders", auth, async (request, response) => {
   try {
-    const orders = await CraftmanUseCase.getAllOrdersByCraftsman(request.params.craftmanId);
+    const orders = await CraftmanUseCase.getAllOrdersByCraftsman(request.user);
     response.json({
       message: "Obtener todas las órdenes de un artesano",
       data: { orders: orders },

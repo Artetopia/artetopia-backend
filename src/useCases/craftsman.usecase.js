@@ -457,19 +457,23 @@ async function getAllCraftsmenAuth() {
   return allCraftsmenAuth;
 }
 
-async function getAllOrdersByCraftsman(craftmanId) {
-  if (!mongoose.isValidObjectId(craftmanId)) {
+async function getAllOrdersByCraftsman(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
     throw new createError(400, "Id inválido");
   }
 
-  const craftsmanObject = new mongoose.Types.ObjectId(craftmanId);
-  const craftsman = await Craftman.findById(craftsmanObject);
+  
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
   if (!craftsman) {
     throw new createError(404, "Craftsman no encontrado");
   }
 
-  const orders = await Order.find({
-    craftsman: new mongoose.Types.ObjectId(craftsman)})
+  const orders = await Order.find({ craftsman: craftsman._id })
 
   return orders;
 }
