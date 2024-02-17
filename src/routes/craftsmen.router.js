@@ -181,12 +181,12 @@ router.get("/allCraftsmen", async (request, response) => {
   }
 });
 
-router.get("/allCraftsmenAuth", auth, async (request, response) => {
+router.get("/:craftmanId/orders/:orderId", auth, async (request, response) => {
   try {
-    const allCraftsmenAuth = await CraftmanUseCase.getAllCraftsmenAuth();
+    const orders = await CraftmanUseCase.getOrderDetailByCraftsman(request.params.craftmanId);
     response.json({
-      message: "Obtener todos los artesanos de la BBDD",
-      data: { craftsmen: allCraftsmenAuth },
+      message: "Obtener el detalle de una orden de un artesano",
+      data: { orders: orders },
     });
   } catch (error) {
     response.status(500);

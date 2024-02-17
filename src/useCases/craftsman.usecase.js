@@ -14,6 +14,7 @@ const Template = require("../models/template.model");
 const TemplateColor = require("../models/templateColors.model");
 const Website = require("../models/website.model");
 const Feedback = require("../models/feedback.model");
+const Order = require("../models/order.model");
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -443,7 +444,7 @@ async function getAllCraftsmen() {
 
 async function getAllCraftsmenAuth() {
   const allCraftsmenAuth = await Craftman.find({ isCraftsman: "accepted" })
-    .select(" categories isCraftsman craftsman feedback user websiteId")
+    .select("categories isCraftsman craftsman feedback user websiteId")
     .populate({ path: "categories", select: "name" })
     .populate({
       path: "user",
@@ -458,6 +459,25 @@ async function getAllCraftsmenAuth() {
   return allCraftsmenAuth;
 }
 
+async function getOrderDetailByCraftsman(craftmanId) {
+  if (!mongoose.isValidObjectId(craftmanId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  const craftsmanObject = new mongoose.Types.ObjectId(craftmanId);
+  const craftsman = await Craftman.findById(craftsmanObject);
+  if (!craftsman) {
+    throw new createError(404, "Craftsman no encontrado");
+  }
+
+  const orders = await Order.find({
+    craftsman: new mongoose.Types.ObjectId(craftsman)})
+    .select("trackingNumber user createdAt shippingStatus")
+    .populate({ path: "user", select: "name" })
+
+  return orders;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -469,4 +489,5 @@ module.exports = {
   getTemplateColor,
   getAllCraftsmen,
   getAllCraftsmenAuth,
+  getOrderDetailByCraftsman
 };
