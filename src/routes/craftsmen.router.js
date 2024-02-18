@@ -181,4 +181,37 @@ router.get("/allCraftsmen", async (request, response) => {
   }
 });
 
+router.get("/allCraftsmenAuth", auth, async (request, response) => {
+  try {
+    const allCraftsmenAuth = await CraftmanUseCase.getAllCraftsmenAuth();
+    response.json({
+      message: "Obtener todos los artesanos de la BBDD",
+      data: { craftsmen: allCraftsmenAuth },
+    });
+  } catch (error) {
+    response.status(500);
+    response.json({
+      message: "Algo fue mal",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/orders", auth, async (request, response) => {
+  try {
+    const orders = await CraftmanUseCase.getAllOrdersByCraftsman(request.user);
+    response.json({
+      message: "Obtener todas las órdenes de un artesano",
+      data: { orders: orders },
+    });
+  } catch (error) {
+    response.status(500);
+    response.json({
+      message: "Algo fue mal",
+      error: error.message,
+    });
+  }
+});
+
+
 module.exports = router;
