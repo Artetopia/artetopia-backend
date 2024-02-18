@@ -5,11 +5,19 @@ const orderSchema = new mongoose.Schema({
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "item",
+        ref: "product",
         required: true,
         trim: true,
       },
       quantity: {
+        type: Number,
+        required: true,
+      },
+      unitPrice: {
+        type: Number,
+        required: true,
+      },
+      orderTotalPrice: {
         type: Number,
         required: true,
       },
@@ -108,6 +116,10 @@ const orderSchema = new mongoose.Schema({
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "craftsman",
+  },
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "product",
   }
 });
 

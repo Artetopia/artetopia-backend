@@ -181,20 +181,4 @@ router.get("/allCraftsmen", async (request, response) => {
   }
 });
 
-router.get("/:craftmanId/orders/:orderId", auth, async (request, response) => {
-  try {
-    const orders = await CraftmanUseCase.getOrderDetailByCraftsman(request.params.craftmanId);
-    response.json({
-      message: "Obtener el detalle de una orden de un artesano",
-      data: { orders: orders },
-    });
-  } catch (error) {
-    response.status(500);
-    response.json({
-      message: "Algo fue mal",
-      error: error.message,
-    });
-  }
-});
-
 module.exports = router;
