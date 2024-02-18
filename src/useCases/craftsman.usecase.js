@@ -474,6 +474,8 @@ async function getAllOrdersByCraftsman(userId) {
   }
 
   const orders = await Order.find({ craftsman: craftsman._id })
+  .select("trackingNumber user createdAt shippingStatus")
+  .populate({ path: "user", select: "name surname" })
 
   return orders;
 }
