@@ -49,18 +49,24 @@ async function getOrderDetailByCraftsman(userId) {
   }
 
   const orders = await Order.findOne({ craftsman: craftsman._id })
-    .select("orderProducts trackingNumber user createdAt address shippingStatus")
+    .select(
+      "orderProducts trackingNumber user createdAt address shippingStatus"
+    )
     .populate({ path: "user", select: "name surname" })
-    .populate({ 
-      path: "orderProducts", 
-      select: "productId", 
-      populate: { path: "productId", select: "title" },
-      });
+    .populate({
+      path: "orderProducts",
+      select: "productId",
+      populate: {
+        path: "productId",
+        select: "title images",
+        populate: { path: "images", select: "url" },
+      },
+    });
 
   return orders;
 }
 
-module.exports = { 
+module.exports = {
   getAllOrdersByCraftsman,
   getOrderDetailByCraftsman,
 };
