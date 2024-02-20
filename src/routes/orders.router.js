@@ -3,7 +3,7 @@ const OrderUseCase = require("../useCases/order.usecase");
 const auth = require("../middleware/auth.middleware");
 const router = express.Router();
 
-router.get("/", auth, async (request, response) => {
+router.get("/craftsman", auth, async (request, response) => {
   try {
     const orders = await OrderUseCase.getAllOrdersByCraftsman(request.user);
     response.json({
