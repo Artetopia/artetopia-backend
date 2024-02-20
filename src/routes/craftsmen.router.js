@@ -197,21 +197,5 @@ router.get("/allCraftsmenAuth", auth, async (request, response) => {
   }
 });
 
-router.get("/orders", auth, async (request, response) => {
-  try {
-    const orders = await CraftmanUseCase.getAllOrdersByCraftsman(request.user);
-    response.json({
-      message: "Obtener todas las órdenes de un artesano",
-      data: { orders: orders },
-    });
-  } catch (error) {
-    response.status(500);
-    response.json({
-      message: "Algo fue mal",
-      error: error.message,
-    });
-  }
-});
-
 
 module.exports = router;
