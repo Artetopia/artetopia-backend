@@ -33,7 +33,7 @@ async function getAllOrdersByCraftsman(userId) {
   return orders;
 }
 
-async function getOrderDetailByCraftsman(userId) {
+async function getOrderDetail(userId, orderId) {
   if (!mongoose.isValidObjectId(userId)) {
     throw new createError(400, "Id inválido");
   }
@@ -48,9 +48,9 @@ async function getOrderDetailByCraftsman(userId) {
     throw new createError(404, "Craftsman no encontrado");
   }
 
-  const orders = await Order.findOne({ craftsman: craftsman._id })
+  const orders = await Order.findById(orderId)
     .select(
-      "orderProducts trackingNumber user createdAt address shippingStatus"
+      "orderProducts orderNumber user createdAt address shippingStatus"
     )
     .populate({ path: "user", select: "name surname" })
     .populate({
@@ -68,5 +68,5 @@ async function getOrderDetailByCraftsman(userId) {
 
 module.exports = {
   getAllOrdersByCraftsman,
-  getOrderDetailByCraftsman,
+  getOrderDetail,
 };

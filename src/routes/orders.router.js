@@ -19,9 +19,9 @@ router.get("/", auth, async (request, response) => {
   }
 });
 
-router.get("/:orderId", auth, async (request, response) => {
+router.get("/craftsman/:orderId", auth, async (request, response) => {
   try {
-    const orders = await OrderUseCase.getOrderDetailByCraftsman(request.user);
+    const orders = await OrderUseCase.getOrderDetail(request.user, request.params.orderId);
     response.json({
       message: "Obtener el detalle de una orden de un artesano",
       data: { orders: orders },

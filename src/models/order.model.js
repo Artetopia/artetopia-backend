@@ -17,10 +17,6 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-      orderTotalPrice: {
-        type: Number,
-        required: true,
-      },
     },
   ],
   address: {
@@ -117,9 +113,9 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "craftsman",
   },
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "product",
+  orderNumber: {
+    type: String,
+    trim: true,
   }
 });
 
