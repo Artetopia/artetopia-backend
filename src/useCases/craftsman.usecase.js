@@ -12,6 +12,9 @@ const Product = require("../models/product.model");
 const Multimedia = require("../models/multimedia.model");
 const Template = require("../models/template.model");
 const TemplateColor = require("../models/templateColors.model");
+const Website = require("../models/website.model");
+const Feedback = require("../models/feedback.model");
+const Order = require("../models/order.model");
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -441,7 +444,7 @@ async function getAllCraftsmen() {
 
 async function getAllCraftsmenAuth() {
   const allCraftsmenAuth = await Craftman.find({ isCraftsman: "accepted" })
-    .select(" categories isCraftsman craftsman feedback user websiteId")
+    .select("categories isCraftsman craftsman feedback user websiteId")
     .populate({ path: "categories", select: "name" })
     .populate({
       path: "user",
