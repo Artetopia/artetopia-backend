@@ -34,7 +34,7 @@ async function getAllOrdersByCraftsman(userId) {
 }
 
 async function getOrderDetail(userId, orderId) {
-  if (!mongoose.isValidObjectId(userId)) {
+  if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(orderId)) {
     throw new createError(400, "Id inválido");
   }
 
@@ -62,6 +62,10 @@ async function getOrderDetail(userId, orderId) {
         populate: { path: "images", select: "url" },
       },
     });
+
+    if(!orders) {
+      throw new createError(404, "Orden no encontrada");
+    }
 
   return orders;
 }
