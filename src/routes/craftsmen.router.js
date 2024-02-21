@@ -197,6 +197,43 @@ router.get("/allCraftsmenAuth", auth, async (request, response) => {
   }
 });
 
+router.patch("/uploadPhotos", auth, async (request, response) => {
+  try {
+    const uploadPhotos = await CraftmanUseCase.uploadPhotos(request.user, request.body);
+    response.json({
+      message: "Se actualizo la informacíon",
+      data: {
+        craftman: uploadPhotos
+      }
+    });
+  } catch(error) {
+    response.status(500);
+    response.json({
+      message: "Algo fue mal",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/photos", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getUploadPhotos(request.user);
+    response.json({
+      message: "Se encontro información",
+      data: {
+        craftman: craftman
+      }
+    });
+
+  } catch (error) {
+    response.status(500);
+    response.json({
+      message: "Algo fue mal",
+      error: error.message,
+    });
+  }
+});
+
 router.get("/:userId", auth, async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);

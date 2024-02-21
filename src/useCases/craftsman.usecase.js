@@ -459,6 +459,232 @@ async function getAllCraftsmenAuth() {
   return allCraftsmenAuth;
 }
 
+async function getAllOrdersByCraftsman(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
+  if (!craftsman) {
+    throw new createError(404, "Craftsman no encontrado");
+  }
+
+  const orders = await Order.find({ craftsman: craftsman._id });
+
+  return orders;
+}
+
+async function uploadPhotos(userId, photosObject) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const ObjectUser = new mongoose.Types.ObjectId(userId);
+  const craftman = await Craftman.findOne({ user: ObjectUser });
+  if (!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  const isBase64ImageProfilePicture =
+    /^data:image\/(jpeg|png|gif|jpg);base64,/.test(photosObject.profilePicture);
+
+  if (isBase64ImageProfilePicture) {
+    const [, mimeProfilePicture, dataProfilePicture] =
+      /^data:(image\/\w+);base64,(.+)$/.exec(photosObject.profilePicture) || [];
+    if (!mimeProfilePicture || !dataProfilePicture) {
+      throw new createError(400, "formato invalido foto de perfil");
+    }
+
+    const extensionProfilePicture = mimeProfilePicture.split("/")[1] || "jpg"; // Default to 'jpg' if extension is not found
+    const imageBufferProfilePicture = Buffer.from(dataProfilePicture, "base64");
+
+    const objectProfilePicture = {
+      buffer: imageBufferProfilePicture,
+      extension: extensionProfilePicture,
+    };
+
+    const uploadProfilePicture = await s3Service.s3UploadUnique(
+      objectProfilePicture
+    );
+
+    const objectMultimediaProfilePicture = {
+      url: uploadProfilePicture.Location,
+      key: uploadProfilePicture.key,
+    };
+    const saveImageProfilePicture = await Multimedia.create(
+      objectMultimediaProfilePicture
+    );
+    if (!saveImageProfilePicture) {
+      throw new createError(400, "Error al guardar la imagen de perfil");
+    }
+
+    const user = User.findByIdAndUpdate(ObjectUser, {
+      avatar: saveImageProfilePicture._id,
+    });
+    if (!user) {
+      throw new createError(400, "Error al guardar la imagen de perfil");
+    }
+  }
+
+  const isBase64ImageBanner = /^data:image\/(jpeg|png|gif|jpg);base64,/.test(
+    photosObject.banner
+  );
+
+  if (isBase64ImageBanner) {
+    const [, mimeBanner, dataBanner] =
+      /^data:(image\/\w+);base64,(.+)$/.exec(photosObject.banner) || [];
+    if (!mimeBanner || !dataBanner) {
+      throw new createError(400, "formato invalido banner");
+    }
+
+    const extensionBanner = mimeBanner.split("/")[1] || "jpg"; // Default to 'jpg' if extension is not found
+    const imageBufferBanner = Buffer.from(dataBanner, "base64");
+
+    const objectBanner = {
+      buffer: imageBufferBanner,
+      extension: extensionBanner,
+    };
+
+    const uploadBanner = await s3Service.s3UploadUnique(objectBanner);
+
+    const objectMultimediaBanner = {
+      url: uploadBanner.Location,
+      key: uploadBanner.key,
+    };
+    const saveImageBanner = await Multimedia.create(objectMultimediaBanner);
+    if (!saveImageBanner) {
+      throw new createError(400, "Error al guardar el banner");
+    }
+
+    const craftmanUpdated = await Craftman.findOneAndUpdate(
+      { user: ObjectUser },
+      { banner: saveImageBanner._id }
+    );
+    if (!craftmanUpdated) {
+      throw new createError(400, "Error al asginar el banner al artesano");
+    }
+  }
+
+  const website = await Website.findById(craftman.websiteId);
+
+  if (!website) {
+    throw new createError(404, "website no encontrado");
+  }
+
+  const objectIdImages = website.images.map((image) => {
+    return image.toString();
+  });
+
+  const uniqueValuesWebsiteImages = objectIdImages.filter(
+    (value) => !photosObject.images.includes(value)
+  );
+
+  if (uniqueValuesWebsiteImages.length > 0) {
+    const images = await Promise.all(
+      uniqueValuesWebsiteImages.map(async (image) => {
+        const objectIdMultimedia = new mongoose.Types.ObjectId(image);
+        const multimedia = await Multimedia.findById(objectIdMultimedia);
+        const deletedFile = await s3Service.s3DeleteFile(multimedia);
+        if (deletedFile) {
+          const websiteUpdated = await Website.findByIdAndUpdate(
+            craftman.websiteId,
+            { $pull: { images: multimedia._id } }
+          );
+          if (websiteUpdated) {
+            const deleteMultimedia = await Multimedia.findByIdAndDelete(
+              multimedia._id
+            );
+            if (!deleteMultimedia) {
+              throw new createError(400, "error el aliminar la imagen");
+            }
+          }
+        }
+      })
+    );
+  }
+
+  const newImagesWebsite = photosObject.newImages.map((image) => {
+    const [, mimeWebsiteImage, dataWebsiteImage] =
+      /^data:(image\/\w+);base64,(.+)$/.exec(image) || [];
+    if (!mimeWebsiteImage || !dataWebsiteImage) {
+      throw new createError(400, "Formato invalido base64");
+    }
+
+    const extension = mimeWebsiteImage.split("/")[1] || "jpg";
+    const imageBuffer = Buffer.from(dataWebsiteImage, "base64");
+
+    return { buffer: imageBuffer, extension };
+  });
+
+  const results = await s3Service.s3UploadMultiple(newImagesWebsite);
+
+  const resultsSaveImagesWebsite = await Promise.all(
+    results.map(async (image) => {
+      const objectMultimedia = {
+        url: image.Location,
+        key: image.key,
+      };
+
+      const saveImageWebsite = await Multimedia.create(objectMultimedia);
+      if (!saveImageWebsite) {
+        throw new createError(400, "Error al crear las imagenes");
+      }
+      return saveImageWebsite._id;
+    })
+  );
+
+  photosObject.images = resultsSaveImagesWebsite;
+
+  const websiteUpdated = await Website.findByIdAndUpdate(craftman.websiteId, {
+    $push: { images: photosObject.images },
+  });
+
+  if (!websiteUpdated) {
+    throw new createError(400, "Error al actualizar la información");
+  }
+
+  const craftmanResult = await Craftman.findOne({ user: ObjectUser }).populate({
+    path: "websiteId",
+  });
+  if (!craftmanResult) {
+    throw new createError(400, "Error al obtener al craftman");
+  }
+
+  return craftmanResult;
+}
+
+async function getUploadPhotos(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+
+  const craftman = await Craftman.findOne(
+    { user: userId },
+    "user, websiteId, banner"
+  )
+    .populate({
+      path: "user",
+      select: "avatar",
+      populate: { path: "avatar", select: "url" },
+    })
+    .populate({
+      path: "websiteId",
+      select: "images",
+      populate: { path: "images", select: "url" },
+    })
+    .populate({ path: "banner", select: "url" });
+  if (!craftman) {
+    throw new createError(404, "No se encontro ningun artesano");
+  }
+
+  return craftman;
+}
+
 async function getCraftmanById(userId) {
   if (!mongoose.isValidObjectId(userId)) {
     throw new createError(400, "Id invalido");
@@ -500,5 +726,8 @@ module.exports = {
   getTemplateColor,
   getAllCraftsmen,
   getAllCraftsmenAuth,
+  getAllOrdersByCraftsman,
+  uploadPhotos,
+  getUploadPhotos,
   getCraftmanById,
 };
