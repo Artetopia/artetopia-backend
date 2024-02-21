@@ -33,7 +33,7 @@ async function getAllOrdersByCraftsman(userId) {
   return orders;
 }
 
-async function getOrderDetail(userId, orderId) {
+async function getOrderDetailCraftman(userId, orderId) {
   if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(orderId)) {
     throw new createError(400, "Id inválido");
   }
@@ -50,7 +50,7 @@ async function getOrderDetail(userId, orderId) {
 
   const orders = await Order.findById(orderId)
     .select(
-      "orderProducts orderNumber user createdAt address shippingStatus"
+      "orderProducts orderNumber user createdAt address shippingStatus craftsman"
     )
     .populate({ path: "user", select: "name surname" })
     .populate({
@@ -67,10 +67,56 @@ async function getOrderDetail(userId, orderId) {
       throw new createError(404, "Orden no encontrada");
     }
 
+    if(!orders.craftsman._id.equals(craftsman._id)) {
+      throw new createError(400, "La orden no esta asginada al artesano");
+    }
+
   return orders;
+}
+
+async function getAllOrdersClient(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+      throw new createError(400, "Id invalido");
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+      throw new createError(404, "Usuario no encontrado");
+  }
+
+  const ordersAll = await Orders.find({ user: user._id })
+  .populate({ path: "user", select: "name surname" });
+
+return ordersAll;
+}
+async function getOrderDetailClient(userId, orderId) {
+
+  if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(orderId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+  
+    const orderIdObject = new mongoose.Types.ObjectId(orderId);
+    const orderbyId = await Order.findById(orderIdObject);
+    if (!orderbyId) {
+      throw new createError(404, "Orden no encontrada");
+    }
+
+    if(!orderbyId.user._id.equals(user._id)) {
+      throw new createError(400, "La orden no esta asginada al usuario");
+    }
+
+    return orderbyId;
+  
 }
 
 module.exports = {
   getAllOrdersByCraftsman,
-  getOrderDetail,
+  getOrderDetailCraftman,
+  getAllOrdersClient,
+  getOrderDetailClient
 };

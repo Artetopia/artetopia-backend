@@ -685,6 +685,36 @@ async function getUploadPhotos(userId) {
   return craftman;
 }
 
+async function getCraftmanById(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+  const craftmanObject = new mongoose.Types.ObjectId(userId);
+  const getCraftmanCal = await Craftman.findOne({ user: craftmanObject });
+  if (!getCraftmanCal) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  if (getCraftmanCal.isCraftsman !== "accepted") {
+    throw new createError(400, "El artesano no es valido");
+  }
+
+  const craftman = await Craftman.find({ _id: getCraftmanCal._id })
+    .populate({
+      path: "user",
+      select: "avatar name surname",
+      populate: { path: "avatar", select: "url" },
+    })
+    .populate({
+      path: "productsId",
+      populate: { path: "images", select: "url" },
+    })
+    .populate({ path: "categories" })
+    .populate({ path: "websiteId", populate: { path: "images" } });
+
+  return craftman;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -699,4 +729,5 @@ module.exports = {
   getAllOrdersByCraftsman,
   uploadPhotos,
   getUploadPhotos,
+  getCraftmanById,
 };

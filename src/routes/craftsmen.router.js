@@ -234,5 +234,23 @@ router.get("/photos", auth, async (request, response) => {
   }
 });
 
+router.get("/:userId", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
+    response.json({
+      message: "Craftman encontrado con exito",
+      data: {
+        craftman: craftman
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
+})
+
 
 module.exports = router;
