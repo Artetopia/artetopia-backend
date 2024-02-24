@@ -250,7 +250,25 @@ router.get("/:userId", auth, async (request, response) => {
       error: error.message,
     });
   }
-})
+});
+
+router.get("/:userId/:productId", auth, async (request, response) => {
+  try {
+    const product = await CraftmanUseCase.getProductById(request.user, request.params.productId);
+    response.json({
+      message: "Producto encontrado con éxito",
+      data: {
+        product: product
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+});
 
 
 module.exports = router;

@@ -715,6 +715,35 @@ async function getCraftmanById(userId) {
   return craftman;
 }
 
+async function getProductById(userId, productId) {
+  if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(productId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
+  if (!craftsman) {
+    throw new createError(404, "Craftsman no encontrado");
+  }
+
+  const product = await Product.findById(productId)
+  .populate({path: "images", select: "url" })
+
+    if(!product) {
+      throw new createError(404, "Producto no encontrado");
+    }
+
+    if(!product.craftsman._id.equals(craftsman._id)) {
+      throw new createError(400, "El producto no está asginado al artesano");
+    }
+
+  return product;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -730,4 +759,5 @@ module.exports = {
   uploadPhotos,
   getUploadPhotos,
   getCraftmanById,
+  getProductById
 };
