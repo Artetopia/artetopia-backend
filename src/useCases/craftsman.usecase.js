@@ -15,6 +15,7 @@ const TemplateColor = require("../models/templateColors.model");
 const Website = require("../models/website.model");
 const Feedback = require("../models/feedback.model");
 const Order = require("../models/order.model");
+const SocialMedia = require("../models/socialMedia.model");
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -734,7 +735,7 @@ async function getCraftmanSiteInformation(userId) {
     .select("websiteId categories shipment")
     .populate({
       path: "websiteId", select: "name description socialMedia",
-      // populate: { path: "socialMedia", select: "type url" }
+      populate: { path: "socialMedia", select: "name url" }
     },)
     .populate({
       path: "categories", select: "name"})

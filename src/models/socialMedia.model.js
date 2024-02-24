@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const socialMediaSchema = new mongoose.Schema({
-  type: {
+  name: {
     type: String,
     enum: ["instagram", "tiktok", "twitter", "facebook"],
   },
