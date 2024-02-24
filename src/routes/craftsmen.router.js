@@ -246,7 +246,24 @@ router.get("/:userId", auth, async (request, response) => {
   } catch (error) {
     response.status(error.status || 500);
     response.json({
-      message: "Algo salio mal",
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+})
+router.post("/:userId/personalInformation", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.createPersonalInformation(request.params.userId);
+    response.json({
+      message: "Craftman encontrado con exito",
+      data: {
+        craftman: craftman
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
       error: error.message,
     });
   }

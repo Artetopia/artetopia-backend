@@ -715,6 +715,29 @@ async function getCraftmanById(userId) {
   return craftman;
 }
 
+// async function createPersonalInformation(userId, personalInformationObject) {
+//   if (!mongoose.isValidObjectId(userId)) {
+//     throw new createError(400, "Id inválido");
+//   }
+
+//   const ObjectUser = new mongoose.Types.ObjectId(userId);
+//   const craftman = await Craftman.findOne({ user: ObjectUser });
+//   if (!craftman) {
+//     throw new createError(404, "Craftman no encontrado");
+//   }
+
+//   craftman.name = personalInformationObject.name;
+//   craftman.surname = personalInformationObject.surname;
+//   craftman.phone = personalInformationObject.phone;
+//   craftman.state = personalInformationObject.state;
+
+//   // Save the updated craftsman document
+//   await craftman.save();
+
+//   return craftman;
+
+// }
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -730,4 +753,5 @@ module.exports = {
   uploadPhotos,
   getUploadPhotos,
   getCraftmanById,
+  createPersonalInformation
 };
