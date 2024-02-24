@@ -173,7 +173,7 @@ router.get("/allCraftsmen", async (request, response) => {
       data: { craftsmen: allCraftsmen },
     });
   } catch (error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
       message: "Algo fue mal",
       error: error.message,
@@ -189,9 +189,9 @@ router.get("/allCraftsmenAuth", auth, async (request, response) => {
       data: { craftsmen: allCraftsmenAuth },
     });
   } catch (error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
-      message: "Algo fue mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
@@ -207,9 +207,9 @@ router.patch("/uploadPhotos", auth, async (request, response) => {
       }
     });
   } catch(error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
-      message: "Algo fue mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
@@ -219,16 +219,16 @@ router.get("/photos", auth, async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getUploadPhotos(request.user);
     response.json({
-      message: "Se encontro información",
+      message: "Se encontró información",
       data: {
         craftman: craftman
       }
     });
 
   } catch (error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
-      message: "Algo fue mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
@@ -238,7 +238,7 @@ router.get("/:userId", auth, async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
     response.json({
-      message: "Craftman encontrado con exito",
+      message: "Craftman encontrado con éxito",
       data: {
         craftman: craftman
       },
@@ -246,7 +246,25 @@ router.get("/:userId", auth, async (request, response) => {
   } catch (error) {
     response.status(error.status || 500);
     response.json({
-      message: "Algo salio mal",
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+})
+
+router.get("/:userId/personalInformation", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanPersonalInformation(request.params.userId);
+    response.json({
+      message: "Artesano encontrado con éxito",
+      data: {
+        craftman: craftman
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
       error: error.message,
     });
   }
