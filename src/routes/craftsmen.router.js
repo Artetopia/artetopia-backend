@@ -268,7 +268,7 @@ router.get("/:userId/siteInformation", auth, async (request, response) => {
       error: error.message,
     });
   }
-})
+});
 
 
 module.exports = router;
