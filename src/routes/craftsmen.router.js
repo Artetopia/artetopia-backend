@@ -252,5 +252,23 @@ router.get("/:userId", auth, async (request, response) => {
   }
 })
 
+router.get("/:userId/siteInformation", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanSiteInformation(request.params.userId);
+    response.json({
+      message: "Artesano encontrado con éxito",
+      data: {
+        craftman: craftman
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+})
+
 
 module.exports = router;
