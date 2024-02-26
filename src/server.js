@@ -6,6 +6,7 @@ const CategoriesRouter = require("../src/routes/category.router");
 const templateColorsRouter = require("./routes/templateColors.router");
 const UserRouter = require("./routes/users.router");
 const OrderRouter = require("./routes/orders.router");
+const FeedbackRouter= require("./routes/feedback.router")
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/categories", CategoriesRouter);
 app.use("/api/templateColors", templateColorsRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/orders", OrderRouter);
+app.use("/api/feedback", FeedbackRouter);
 
 app.get("/api", (request, response) => {
   response.json({
