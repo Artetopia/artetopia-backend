@@ -234,7 +234,7 @@ router.get("/photos", auth, async (request, response) => {
   }
 });
 
-router.get("/:userId", auth, async (request, response) => {
+router.get("/:userId", async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
     response.json({
