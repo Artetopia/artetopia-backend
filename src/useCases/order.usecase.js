@@ -83,7 +83,7 @@ async function getAllOrdersClient(userId) {
       throw new createError(404, "Usuario no encontrado");
   }
 
-  const ordersAll = await Orders.find({ user: user._id })
+  const ordersAll = await Order.find({ user: user._id })
   .populate({ path: "user", select: "name surname" });
 
 return ordersAll;
@@ -113,10 +113,46 @@ async function getOrderDetailClient(userId, orderId) {
     return orderbyId;
   
 }
+async function rateOrder(userId, ratingObject) {
+  if(!mongoose.isValidObjectId(ratingObject.craftmanId) || !mongoose.isValidObjectId(ratingObject.orderId) || !mongoose.isValidObjectId(userId)){
+    throw new createError(400,"Id invalido")
+   }
+
+   const user = await User.findById(userId);
+   if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+   }
+
+   const craftman = await Craftman.findById(ratingObject.craftmanId)
+   if(!craftman){
+    throw new createError(404,"Craftman no encontrado")
+   }
+
+   const order = await Order.findById(ratingObject.orderId)
+   if(!order){
+    throw new createError(404,"Orden no encontrada")
+   }
+
+   if(!order.user.equals(user._id) || !order.craftsman.equals(craftman._id)) {
+    throw new createError(400, "No puede calificar la orden");
+   }
+
+   if(order.feedback || order.shippingStatus !== "delivered"){
+    throw new createError(400,"La orden ya fue calificada")
+   }
+
+   const orderUpdated= await Order.findByIdAndUpdate(order._id, {feedback:ratingObject.rating});
+   if(!orderUpdated){
+    throw new createError(400,"No se pudo calificar correctamente")
+   }
+
+   return orderUpdated
+}
 
 module.exports = {
   getAllOrdersByCraftsman,
   getOrderDetailCraftman,
   getAllOrdersClient,
-  getOrderDetailClient
+  getOrderDetailClient,
+  rateOrder
 };
