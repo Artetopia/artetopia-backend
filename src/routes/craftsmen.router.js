@@ -251,11 +251,11 @@ router.get("/:userId", auth, async (request, response) => {
     });
   }
 })
-router.post("/:userId/personalInformation", auth, async (request, response) => {
+router.patch("/personalInformation", auth, async (request, response) => {
   try {
-    const craftman = await CraftmanUseCase.createPersonalInformation(request.params.userId);
+    const craftman = await CraftmanUseCase.createPersonalInformation(request.user);
     response.json({
-      message: "Craftman encontrado con exito",
+      message: "Craftman encontrado con éxito`",
       data: {
         craftman: craftman
       },

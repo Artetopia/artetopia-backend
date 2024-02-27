@@ -715,28 +715,40 @@ async function getCraftmanById(userId) {
   return craftman;
 }
 
-// async function createPersonalInformation(userId, personalInformationObject) {
-//   if (!mongoose.isValidObjectId(userId)) {
-//     throw new createError(400, "Id inválido");
-//   }
+async function createPersonalInformation(userId, personalInformationObject) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id inválido");
+  }
 
-//   const ObjectUser = new mongoose.Types.ObjectId(userId);
-//   const craftman = await Craftman.findOne({ user: ObjectUser });
-//   if (!craftman) {
-//     throw new createError(404, "Craftman no encontrado");
-//   }
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+  const craftman = await Craftman.findOne({ user: user._id });
+  if (!craftman) {
+    throw new createError(404, "Craftman no encontrado");
+  }
 
-//   craftman.name = personalInformationObject.name;
-//   craftman.surname = personalInformationObject.surname;
-//   craftman.phone = personalInformationObject.phone;
-//   craftman.state = personalInformationObject.state;
+  const userUpdated = await User.findByIdAndUpdate(user._id, {
+    name: personalInformationObject.name, 
+    surname: personalInformationObject.surname, 
+    phone: personalInformationObject.phone, 
+  })
+  if(!userUpdated) {
+    throw new createError(404, "Usuario no pudo actualizarse")
+  }
 
-//   // Save the updated craftsman document
-//   await craftman.save();
+  const craftmanUpdated = await Craftman.findByIdAndUpdate(craftman._id, {
+    state: personalInformationObject.state
+  }, { new: true }) // Get updated craftman info
+  .populate({ path: "user", select: "name surname phone" });
 
-//   return craftman;
+  if(!craftmanUpdated) {
+    throw new createError(404, "Craftman no pudo actualizarse")
+  }
 
-// }
+  return craftmanUpdated;
+}
 
 module.exports = {
   createProduct,
