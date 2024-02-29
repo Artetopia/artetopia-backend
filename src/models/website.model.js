@@ -54,10 +54,6 @@ const websiteSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  template: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "template",
-  },
   craftsman: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "craftsman",
