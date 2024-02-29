@@ -234,7 +234,7 @@ router.get("/photos", auth, async (request, response) => {
   }
 });
 
-router.get("/:userId", auth, async (request, response) => {
+router.get("/:userId", async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
     response.json({
@@ -251,6 +251,25 @@ router.get("/:userId", auth, async (request, response) => {
     });
   }
 })
+
+router.get("/getCraftmanTemplate/:userId", async(request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanByIdTemplate(request.params.userId);
+    response.json({
+      message: "Craftman encontrado con exito",
+      data: {
+        craftman: craftman,
+        socialMedia: craftman.socialMedia
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
+});
 
 
 module.exports = router;
