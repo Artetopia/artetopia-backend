@@ -13,8 +13,8 @@ const Multimedia = require("../models/multimedia.model");
 const Template = require("../models/template.model");
 const TemplateColor = require("../models/templateColors.model");
 const Website = require("../models/website.model");
-const Feedback = require("../models/feedback.model");
 const Order = require("../models/order.model");
+const SocialMedia = require("../models/socialMedia.model");
 
 async function createProduct(userId, productObject) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -755,6 +755,78 @@ async function createPersonalInformation(userId, personalInformationObject) {
   return craftmanUpdated;
 }
 
+async function getCraftmanByIdTemplate(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id invalido");
+  }
+  const craftmanObject = new mongoose.Types.ObjectId(userId);
+  const getCraftmanCal = await Craftman.findOne({ user: craftmanObject });
+  if (!getCraftmanCal) {
+    throw new createError(404, "Craftman no encontrado");
+  }
+
+  if (getCraftmanCal.isCraftsman !== "accepted") {
+    throw new createError(400, "El artesano no es valido");
+  }
+
+  const websiteCraftman = await Template.findById(getCraftmanCal.templateId);
+  if (!websiteCraftman) {
+    throw new createError(400, "No tiene asginado el artesano una plantilla");
+  }
+
+  let craftman;
+
+  if (websiteCraftman.name === "A") {
+    craftman = await Craftman.findById(getCraftmanCal._id)
+      .select("user productsId categories websiteId")
+      .populate({
+        path: "user",
+        select: "name surname phone email avatar",
+        populate: { path: "avatar", select: "url" },
+      })
+      .populate({
+        path: "productsId",
+        select: "title description inventory price images",
+        populate: { path: "images", select: "url" },
+      })
+      .populate({ path: "categories", select: "name" })
+      .populate({
+        path: "websiteId",
+        select: "name description images",
+        populate: [
+          { path: "images", select: "url" }
+        ],
+      });
+
+      const socialMedia = await SocialMedia.find({ websiteId: craftman.websiteId._id }).select("name url");
+      craftman.socialMedia = socialMedia;
+  } else if (websiteCraftman.name === "B") {
+    craftman = await Craftman.findById(getCraftmanCal._id)
+    .select("user productsId categories websiteId")
+    .populate({
+      path: "user",
+      select: "name surname phone email"
+    })
+    .populate({
+      path: "productsId",
+      select: "title description inventory price images",
+      populate: { path: "images", select: "url" },
+    })
+    .populate({ path: "categories", select: "name" })
+    .populate({
+      path: "websiteId",
+      select: "name description images video sections",
+      populate: [
+        { path: "images", select: "url" },
+        { path: "video", select: "url" },
+        {path: "sections.backgroundImage", select: "url"}
+      ],
+    });
+  }
+
+  return craftman;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -770,5 +842,6 @@ module.exports = {
   uploadPhotos,
   getUploadPhotos,
   getCraftmanById,
-  createPersonalInformation
+  createPersonalInformation,
+  getCraftmanByIdTemplate,
 };

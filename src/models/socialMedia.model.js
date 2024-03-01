@@ -18,8 +18,10 @@ const socialMediaSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "website",
+  websiteId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "website",
+  }
 });
 
 module.exports = mongoose.model("socialMedia", socialMediaSchema);
