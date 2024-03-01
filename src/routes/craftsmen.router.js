@@ -253,7 +253,7 @@ router.get("/:userId", auth, async (request, response) => {
 })
 router.patch("/personalInformation", auth, async (request, response) => {
   try {
-    const craftman = await CraftmanUseCase.createPersonalInformation(request.user);
+    const craftman = await CraftmanUseCase.createPersonalInformation(request.user, request.body);
     response.json({
       message: "Craftman encontrado con éxito`",
       data: {
