@@ -234,6 +234,24 @@ router.get("/photos", auth, async (request, response) => {
   }
 });
 
+router.get("/siteInformation", auth, async (request, response) => {
+  try {
+    const craftsman = await CraftmanUseCase.getCraftmanSiteInformation(request.user);
+    response.json({
+      message: "Información del sitio del artesano encontrada con éxito",
+      data: {
+        craftsman: craftsman,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+});
+
 router.get("/:userId", auth, async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
@@ -251,24 +269,6 @@ router.get("/:userId", auth, async (request, response) => {
     });
   }
 })
-
-router.get("/:userId/siteInformation", auth, async (request, response) => {
-  try {
-    const craftman = await CraftmanUseCase.getCraftmanSiteInformation(request.params.userId);
-    response.json({
-      message: "Artesano encontrado con éxito",
-      data: {
-        craftman: craftman
-      },
-    });
-  } catch (error) {
-    response.status(error.status || 500);
-    response.json({
-      message: "Algo salió mal",
-      error: error.message,
-    });
-  }
-});
 
 
 module.exports = router;
