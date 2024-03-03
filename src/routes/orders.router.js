@@ -51,4 +51,38 @@ router.get("/user/:orderId", auth, async (request, response) => {
   }
 });
 
+router.get("/user", auth, async (request, response) => {
+  try {
+    const orders = await OrderUseCase.getAllOrdersClient(request.user);
+    response.json({
+      message: "Se obtuvieron todas las ordenes del cliente",
+      data: { orders: orders },
+    });
+  } catch (error) {
+    response.status(500);
+    response.json({
+      message: "Algo fue mal",
+      error: error.message,
+    });
+  }
+});
+
+router.patch("/rateOrder", auth, async (request, response) => {
+  try {
+    const order = await OrderUseCase.rateOrder(request.user, request.body);
+    response.json({
+      message: "Calificaste al artesano correctamente",
+      data: {
+        rating: order,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
+})
+
 module.exports = router;

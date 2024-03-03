@@ -264,11 +264,47 @@ router.get("/:userId", auth, async (request, response) => {
   } catch (error) {
     response.status(error.status || 500);
     response.json({
-      message: "Algo salio mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
 })
+router.patch("/personalInformation", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.createPersonalInformation(request.user, request.body);
+    response.json({
+      message: "Craftman encontrado con éxito`",
+      data: {
+        craftman: craftman
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+})
+
+router.get("/getCraftmanTemplate/:userId", async(request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanByIdTemplate(request.params.userId);
+    response.json({
+      message: "Craftman encontrado con exito",
+      data: {
+        craftman: craftman,
+        socialMedia: craftman.socialMedia
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salio mal",
+      error: error.message,
+    });
+  }
+});
 
 
 module.exports = router;
