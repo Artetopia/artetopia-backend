@@ -102,8 +102,8 @@ const orderSchema = new mongoose.Schema({
     default: Date.now,
   },
   feedback: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "feedback",
+    type: Number,
+    trim: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
