@@ -12,7 +12,7 @@ async function getTemplateColors() {
     return findTemplateColors;
 }
 
-async function updateAditionalB(craftmanId, templateId, aditionalObject, aditionalInfoObject) {
+async function updateAditionalB(craftmanId, templateId,aditionalInfoObject) {
     if (!mongoose.isValidObjectId(craftmanId) || !mongoose.isValidObjectId(templateId)) {
         throw new createError(400, "Id inválido");
     }
@@ -38,7 +38,7 @@ async function updateAditionalB(craftmanId, templateId, aditionalObject, adition
         throw new createError(400, "El template no requiere informacion adicional");
     }
 
-    const newVideo = aditionalObject.newVideo.map((video) => {
+    const newVideo = aditionalInfoObject.newVideo.map((video) => {
         const [, mime, data] = /^data:(video\/\w+);base64,(.+)$/.exec(video) || [];
         if (!mime || !data) {
             throw new createError(500, "Invalid base64 data format");
@@ -65,11 +65,11 @@ async function updateAditionalB(craftmanId, templateId, aditionalObject, adition
     );
 
     const isBase64ImageBanner =
-        /^data:image\/(jpeg|png|gif|jpg);base64,/.test(aditionalObject.backgroundImage);
+        /^data:image\/(jpeg|png|gif|jpg);base64,/.test(aditionalInfoObject.backgroundImage);
 
     if (isBase64ImageBanner) {
         const [, mimeBannerSection, dataBannerSection] =
-            /^data:(image\/\w+);base64,(.+)$/.exec(aditionalObject.backgroundImage) || [];
+            /^data:(image\/\w+);base64,(.+)$/.exec(aditionalInfoObject.backgroundImage) || [];
         if (!mimeBannerSection || !dataBannerSection) {
             throw new createError(400, "formato invalido foto de sección");
         }
