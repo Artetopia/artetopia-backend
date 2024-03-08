@@ -827,6 +827,74 @@ async function getCraftmanByIdTemplate(userId) {
   return craftman;
 }
 
+async function createSiteInformation(userId, body) {
+  if(!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Usuario no encontrado");
+  }
+
+  const user = await User.findById(userId);
+  if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
+  if(!craftsman) {
+    throw new createError(404, "Artesano no encontrado");
+  }
+
+  let craftsmanWebsite;
+
+  if(craftsman.websiteId) {
+    craftsmanWebsite = await Website.findById(craftsman.websiteId);
+    if(!craftsmanWebsite) {
+      throw new createError(404, "Sitio del artesano no encontrado");
+    }
+    craftsmanWebsite.name = body.website.name;
+    craftsmanWebsite.description = body.website.description;
+    body.socialMedia.forEach(async (socialMedia) => {
+      const socialMediaUnique = await SocialMedia.findOne({
+          websiteId: craftsmanWebsite._id, name: socialMedia["name"]
+      })
+      if(socialMediaUnique) {
+        socialMediaUnique.url = socialMedia["url"];
+        socialMediaUnique.save();
+      } else {
+        const newSocialMedia = await SocialMedia.create({name: socialMedia["name"], url: socialMedia["url"], 
+        websiteId: craftsmanWebsite._id});
+      }
+    });
+
+    await craftsmanWebsite.save();
+  } else {
+    craftsmanWebsite = new Website({
+      name: websiteObject.name,
+      description: websiteObject.description,
+    });
+    await craftsmanWebsite.save();
+
+    // Update craftsman with the new websiteId created
+    craftsman.websiteId = craftsmanWebsite._id;
+    await craftsman.save();
+  }
+
+  body.categories.forEach(async (category) => {
+    if(!craftsman.categories.includes(category._id)) {
+      const newCategory = await Craftman.findByIdAndUpdate(
+        craftsman._id, {
+          $push: {categories: category._id}
+        }
+      )
+    }
+  })
+
+
+  const allCraftsmanInformationUpdated = await Craftman.findByIdAndUpdate(craftsman._id,
+    {shipment: body.shipment}, {new: true})
+  .populate({path: "websiteId", select: "name description"}) 
+
+  return allCraftsmanInformationUpdated;
+}
+
 module.exports = {
   createProduct,
   getAllProductsByCraftman,
@@ -844,4 +912,5 @@ module.exports = {
   getCraftmanById,
   createPersonalInformation,
   getCraftmanByIdTemplate,
+  createSiteInformation
 };

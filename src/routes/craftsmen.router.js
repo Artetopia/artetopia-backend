@@ -289,4 +289,27 @@ router.get("/getCraftmanTemplate/:userId", async(request, response) => {
 });
 
 
+router.patch("/siteInformation", auth, async(request, response) => {
+  try {
+    // const { userId, websiteObject } = request.body;
+    // const craftsmanWebsite = await CraftmanUseCase.createSiteInformation(userId, websiteObject);
+    const craftsmanSiteUpdated = await CraftmanUseCase.createSiteInformation(
+      request.user,
+      request.body
+    )
+    response.json({
+      message: "Información del website creada o actualizada correctamente",
+      data: {
+        craftsmanSiteUpdated: craftsmanSiteUpdated,
+      }
+    })
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    })
+  }
+})
+
 module.exports = router;

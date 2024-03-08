@@ -12,7 +12,7 @@ const websiteSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: 40,
+    minLength: 1,
     maxLength: 160,
   },
   images: [
@@ -37,7 +37,7 @@ const websiteSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minLength: 40,
+        minLength: 1,
         maxLength: 160,
       },
       backgroundImage: {
