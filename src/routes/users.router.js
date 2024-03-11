@@ -21,4 +21,22 @@ router.get("/:orderId/shippingStatus", auth, async (request, response) => {
   }
 });
 
+router.post("/checkout", auth, async (request, response) => {
+  try {
+    const orders = await UserUseCase.checkout(request.user, request.body);
+    response.json({
+      message: "Orden(s) creadas correctamente",
+      data: {
+        orders: orders
+      }
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+})
+
 module.exports = router;
