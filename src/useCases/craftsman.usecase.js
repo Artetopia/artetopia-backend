@@ -700,10 +700,6 @@ async function getCraftsmanPersonalInformation(userId) {
     throw new createError(404, "Artesano no encontrado");
   }
 
-  if(craftsman.isCraftsman !== "accepted") {
-    throw new createError(400, "El artesano no es válido");
-  }
-
   const craftsmanInformation = await Craftman.find({ _id: craftsman._id })
   .select("state")
   .populate({
@@ -712,6 +708,35 @@ async function getCraftsmanPersonalInformation(userId) {
 
   return craftsmanInformation;
 }
+
+
+async function getCraftmanSiteInformation(userId) {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new createError(400, "Id inválido");
+  }
+
+  const user = await User.findById(userId);
+  if(!user) {
+    throw new createError(404, "Usuario no encontrado");
+  }
+
+  const craftsman = await Craftman.findOne({ user: user._id });
+  if(!craftsman) {
+    throw new createError(404, "Artesano no encontrado");
+  }
+
+  const craftsmanSiteInformation = await Craftman.find({ _id: craftsman._id })
+    .select("websiteId categories shipment")
+    .populate({
+      path: "websiteId", select: "name description socialMedia",
+      populate: { path: "socialMedia", select: "name url" }
+    },)
+    .populate({
+      path: "categories", select: "name"})
+
+  return craftsmanSiteInformation;
+}
+
 
 async function getCraftmanById(userId) {
   if (!mongoose.isValidObjectId(userId)) {
@@ -870,6 +895,7 @@ module.exports = {
   uploadPhotos,
   getUploadPhotos,
   getCraftsmanPersonalInformation,
+  getCraftmanSiteInformation,
   getCraftmanById,
   createPersonalInformation,
   getCraftmanByIdTemplate,

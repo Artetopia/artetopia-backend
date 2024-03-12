@@ -234,7 +234,25 @@ router.get("/photos", auth, async (request, response) => {
   }
 });
 
-router.get("/personalInformation", auth, async (request, response) => {
+router.get("/siteInformation", auth, async (request, response) => {
+  try {
+    const craftsman = await CraftmanUseCase.getCraftmanSiteInformation(request.user);
+    response.json({
+      message: "Información del sitio del artesano encontrada con éxito",
+      data: {
+        craftsman: craftsman,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/personalInformation", auth, auth, async (request, response) => {
   try {
     const craftsman = await CraftmanUseCase.getCraftsmanPersonalInformation(request.user);
     response.json({
