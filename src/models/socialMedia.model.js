@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const socialMediaSchema = new mongoose.Schema({
-  type: {
+  name: {
     type: String,
-    enum: ["instagram", "tiktok", "whatsapp", "facebook"],
+    enum: ["instagram", "tiktok", "twitter", "facebook"],
   },
   url: {
     type: String,
@@ -21,7 +21,7 @@ const socialMediaSchema = new mongoose.Schema({
   websiteId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "website",
-  }
+  },
 });
 
 module.exports = mongoose.model("socialMedia", socialMediaSchema);

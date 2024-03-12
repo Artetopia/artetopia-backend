@@ -58,6 +58,11 @@ const websiteSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "craftsman",
   },
+  // Originally, no reference here to socialMedia model
+  socialMedia: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "socialMedia",
+  },
 });
 
 module.exports = mongoose.model("website", websiteSchema);
