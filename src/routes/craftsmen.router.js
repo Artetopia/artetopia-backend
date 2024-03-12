@@ -173,7 +173,7 @@ router.get("/allCraftsmen", async (request, response) => {
       data: { craftsmen: allCraftsmen },
     });
   } catch (error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
       message: "Algo fue mal",
       error: error.message,
@@ -189,9 +189,9 @@ router.get("/allCraftsmenAuth", auth, async (request, response) => {
       data: { craftsmen: allCraftsmenAuth },
     });
   } catch (error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
-      message: "Algo fue mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
@@ -207,9 +207,9 @@ router.patch("/uploadPhotos", auth, async (request, response) => {
       }
     });
   } catch(error) {
-    response.status(500);
+    response.status(error.status || 500);
     response.json({
-      message: "Algo fue mal",
+      message: "Algo salió mal",
       error: error.message,
     });
   }
@@ -219,30 +219,12 @@ router.get("/photos", auth, async (request, response) => {
   try {
     const craftman = await CraftmanUseCase.getUploadPhotos(request.user);
     response.json({
-      message: "Se encontro información",
+      message: "Se encontró información",
       data: {
         craftman: craftman
       }
     });
 
-  } catch (error) {
-    response.status(500);
-    response.json({
-      message: "Algo fue mal",
-      error: error.message,
-    });
-  }
-});
-
-router.get("/:userId", async (request, response) => {
-  try {
-    const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
-    response.json({
-      message: "Craftman encontrado con exito",
-      data: {
-        craftman: craftman
-      },
-    });
   } catch (error) {
     response.status(error.status || 500);
     response.json({
@@ -250,12 +232,31 @@ router.get("/:userId", async (request, response) => {
       error: error.message,
     });
   }
-})
-router.patch("/personalInformation", auth, async (request, response) => {
+});
+
+router.get("/personalInformation", auth, async (request, response) => {
   try {
-    const craftman = await CraftmanUseCase.createPersonalInformation(request.user, request.body);
+    const craftsman = await CraftmanUseCase.getCraftsmanPersonalInformation(request.user);
     response.json({
-      message: "Craftman encontrado con éxito`",
+      message: "Información del artesano encontrada con éxito",
+      data: {
+        craftsman: craftsman,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      message: "Algo salió mal",
+      error: error.message,
+    })
+  }
+})
+
+router.get("/:userId", auth, async (request, response) => {
+  try {
+    const craftman = await CraftmanUseCase.getCraftmanById(request.params.userId);
+    response.json({
+      message: "Craftman encontrado con éxito",
       data: {
         craftman: craftman
       },
@@ -287,6 +288,5 @@ router.get("/getCraftmanTemplate/:userId", async(request, response) => {
     });
   }
 });
-
 
 module.exports = router;
