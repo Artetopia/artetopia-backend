@@ -877,20 +877,28 @@ async function createSiteInformation(userId, body) {
     await craftsman.save();
   }
 
-  body.categories.forEach(async (category) => {
-    if(!craftsman.categories.includes(category._id)) {
-      const newCategory = await Craftman.findByIdAndUpdate(
-        craftsman._id, {
-          $push: {categories: category._id}
-        }
-      )
-    }
-  })
+  // body.categories.forEach(async (category) => {
+  //   if(!craftsman.categories.includes(category._id)) {
+  //     const newCategory = await Craftman.findByIdAndUpdate(
+  //       craftsman._id, {
+  //         $push: {categories: category._id}
+  //       }
+  //     )
+  //   }
+  // })
 
+  // get id categories
+  const categoryId = body.categories.map(category => category._id);
+  const newCategory = await Craftman.findByIdAndUpdate(
+    craftsman._id, {
+      categories: categoryId
+    }
+  )
 
   const allCraftsmanInformationUpdated = await Craftman.findByIdAndUpdate(craftsman._id,
     {shipment: body.shipment}, {new: true})
-  .populate({path: "websiteId", select: "name description"}) 
+  .populate({path: "websiteId", select: "name description"})
+  .populate({path: "categories", select: "name"})
 
   return allCraftsmanInformationUpdated;
 }
